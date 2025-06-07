@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add a Book</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <form action="/add-book" method="POST">
+    <input name="title" required placeholder="Title" />
+    <input name="author" required placeholder="Author" />
+    <textarea name="desc" placeholder="Description"></textarea>
+    <input name="moodtags" required placeholder="Mood tags (comma-separated)" />
+    <input name="uploadedBy" placeholder="Your name" />
+    <button type="submit">Submit Book</button>
+  </form>
+
+</body>
+</html>
