@@ -1,58 +1,281 @@
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  padding: 20px;
+  margin: 0;
+  padding: 0;
   background-color: #f9f9f9;
 }
 
-form {
-  max-width: 500px;
-  margin: auto;
+/* ===== Form Styling scoped ONLY to Add Book form ===== */
+.book-form {
+  max-width: 480px;
+  margin: 30px auto;
   background: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 24px 30px;
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-input, textarea, button {
+.book-form input,
+.book-form textarea {
   width: 100%;
-  padding: 10px;
-  margin: 10px 0;
+  padding: 16px 18px; /* Increased padding for better placeholder spacing */
+  margin: 10px 0 18px 0;
+  border: 1.8px solid #ccc;
   border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 1em;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+  font-family: inherit;
+  resize: vertical;
+  box-sizing: border-box; /* Ensures padding doesn't affect width */
+  line-height: 1.4; /* Better text alignment */
 }
 
-button {
+.book-form input::placeholder,
+.book-form textarea::placeholder {
+  color: #888;
+  opacity: 1;
+  padding-left: 2px; /* Small left padding for placeholder text */
+}
+
+.book-form input:focus,
+.book-form textarea:focus {
+  outline: none;
+  border-color: #4caf50;
+  box-shadow: 0 0 6px rgba(76, 175, 80, 0.4);
+}
+
+.book-form textarea {
+  min-height: 120px; /* Slightly increased for better UX */
+  padding-top: 16px; /* Consistent top padding */
+}
+
+.book-form button {
   background-color: #4caf50;
   color: white;
-  cursor: pointer;
   border: none;
-  transition: background 0.3s ease;
+  padding: 16px 0; /* Slightly increased for better touch targets */
+  width: 100%;
+  font-size: 18px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-sizing: border-box;
 }
 
-button:hover {
-  background-color: #45a049;
+.book-form button:hover {
+  background-color: #388e3c;
 }
 
-input, textarea {
-  font-size: 16px; /* Avoids iOS zoom issue */
+
+
+/* ===== NAVBAR ===== */
+.navbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background-color: #4caf50;
+  color: white;
 }
 
-.book-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
+.navbar-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 1 1 auto;
 }
 
-.book-card {
+.logo a {
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.nav-links {
+  justify-content: center;
+  flex: 2 1 auto;
+}
+
+.nav-links a,
+.auth-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.nav-links a:hover,
+.auth-links a:hover {
+  text-decoration: underline;
+}
+
+.nav-search {
+  justify-content: center;
+  flex: 2 1 auto;
+}
+
+.search-form {
+  display: flex;
+  gap: 5px;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 6px 10px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.search-form input {
+  padding: 5px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  width: 160px;
+}
+
+.search-form button {
   background: white;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  color: #4caf50;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
 }
 
-@media (max-width: 600px) {
-  form {
-    padding: 20px;
+.auth-links {
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ===== Responsive Navbar ===== */
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .navbar-section {
+    justify-content: center;
+    margin: 10px 0;
+    flex-wrap: wrap;
+  }
+
+  .search-form input {
+    width: 140px;
+  }
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hamburger {
+    display: block;
+    align-self: flex-end;
+  }
+
+  .nav-right {
+    width: 100%;
+  }
+
+  .nav-links, .auth-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .search-form {
+    width: 100%;
+    justify-content: center;
+    margin: 10px 0;
+  }
+
+  .search-form input {
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .auth-links {
+    align-items: flex-end;
+  }
+}
+
+/* Hamburger icon */
+.hamburger {
+  display: none;
+  font-size: 28px;
+  color: white;
+  cursor: pointer;
+}
+
+/* Default hidden for small-screen toggled elements */
+.nav-links.show, .auth-links.show {
+  display: flex !important;
+}
+/* Mobile Responsive Styles */
+@media screen and (max-width: 768px) {
+  .book-form {
+    margin: 20px 16px;
+    padding: 20px 24px;
+    max-width: none; /* Allow full width on mobile */
+  }
+  
+  .book-form input,
+  .book-form textarea {
+    padding: 14px 16px;
+    font-size: 16px; /* Prevents zoom on iOS */
+    margin: 8px 0 16px 0;
+  }
+  
+  .book-form textarea {
+    min-height: 100px;
+  }
+  
+  .book-form button {
+    padding: 14px 0;
+    font-size: 17px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .book-form {
+    margin: 15px 12px;
+    padding: 18px 20px;
+  }
+  
+  .book-form input,
+  .book-form textarea {
+    padding: 12px 14px;
+    margin: 6px 0 14px 0;
+  }
+  
+  .book-form textarea {
+    min-height: 90px;
+  }
+  
+  .book-form button {
+    padding: 12px 0;
+    font-size: 16px;
+  }
+}
+
+/* Additional mobile optimizations */
+@media screen and (max-width: 320px) {
+  .book-form {
+    margin: 10px 8px;
+    padding: 16px 18px;
+  }
+  
+  .book-form input,
+  .book-form textarea {
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .search-form input {
+    max-width: 150px;
   }
 }

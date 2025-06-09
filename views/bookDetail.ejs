@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>
+        <%= book.title %> - MoodVerse
+    </title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>
+            <%= book.title %>
+        </h1>
+        <h3>by <%= book.author %>
+        </h3>
+        <p>
+            <%= book.desc %>
+        </p>
+        <p><strong>Mood Tags:</strong>
+            <%= book.moodtags.join(', ') %></p>
+    <p><strong>Uploaded by:</strong> <%= book.uploadedBy %></p>
+    <a href="/books">← Back to Book List</a>
+  </div>
+</body>
+</html>
