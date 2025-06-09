@@ -38,6 +38,19 @@ input, textarea {
   font-size: 16px; /* Avoids iOS zoom issue */
 }
 
+.book-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.book-card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
 @media (max-width: 600px) {
   form {
     padding: 20px;

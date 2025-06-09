@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Book List</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <h1>All Books</h1>
+  <div class="book-container">
+    <% books.forEach(book => { %>
+      <div class="book-card">
+        <h3><%= book.title %></h3>
+        <p><strong>Author:</strong> <%= book.author %></p>
+        <p><strong>Mood:</strong> <%= book.moodtags.join(', ') %></p>
+        <p><%= book.desc %></p>
+        <p><em>Uploaded by: <%= book.uploadedBy %></em></p>
+      </div>
+    <% }) %>
+  </div>
+</body>
+</html>
