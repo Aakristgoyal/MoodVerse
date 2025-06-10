@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const path = require('path')
 const expressLayouts = require('express-ejs-layouts');
 const session = require('express-session');
-
+const Book = require('./models/books');
 const port = 3000
 
 // Middleware
@@ -20,6 +20,12 @@ app.use(session({
     saveUninitialized: false,
     cookie: { maxAge: 24 * 60 * 60 * 1000 } 
 }));
+
+app.use((req, res, next) => {
+    res.locals.loggedIn = !!req.session.userId;
+    res.locals.currentUser = req.session.user || null; // Optional: full user info
+    next();
+});
 
 // View engine
 app.set('view engine', 'ejs');
@@ -37,8 +43,21 @@ app.get('/test', (req, res) => {
     res.send('Express server is working');
 });
 
+app.get("/search", async (req, res) => {
+  const query = req.query.query;
+  const books = await Book.find({
+    $or: [
+      { title: { $regex: query, $options: "i" } },
+      { author: { $regex: query, $options: "i" } },
+      { moodTags: { $regex: query, $options: "i" } }
+    ]
+  });
+  res.render("bookList", { books });
+});
+
+
 // Routes
-const mainroutes = require('./routes/main')
+const mainroutes = require('./routes/bookRoutes')
 app.use(mainroutes)
 
 app.listen(port, () => {

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - MoodVerse</title>
+    <link rel="stylesheet" href="CSS/login.css"> <!-- Reuse same CSS -->
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>Join MoodVerse</h1>
+            <p>Create your free account</p>
+        </div>
+
+        <div class="login-form">
+            <% if (typeof error !== 'undefined' && error) { %>
+                <div class="error-message">
+                    <%= error %>
+                </div>
+            <% } %>
+
+            <% if (typeof success !== 'undefined' && success) { %>
+                <div class="success-message">
+                    <%= success %>
+                </div>
+            <% } %>
+
+            <form action="/signup" method="POST">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your name" required
+                        value="<%= typeof formData !== 'undefined' ? formData.name || '' : '' %>">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" placeholder="Enter your email" required
+                        value="<%= typeof formData !== 'undefined' ? formData.email || '' : '' %>">
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Create a password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+                    <span class="password-toggle" onclick="togglePassword()">Show</span>
+                </div>
+
+                <button type="submit" class="login-btn">Sign Up</button>
+            </form>
+
+            <div class="divider">
+                <span>or</span>
+            </div>
+
+            <div class="signup-link">
+                Already have an account? <a href="/login">Login here</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const pass = document.getElementById('password');
+            const confirm = document.getElementById('confirmPassword');
+            const toggle = document.querySelector('.password-toggle');
+
+            if (pass.type === 'password' || confirm.type === 'password') {
+                pass.type = confirm.type = 'text';
+                toggle.textContent = 'Hide';
+            } else {
+                pass.type = confirm.type = 'password';
+                toggle.textContent = 'Show';
+            }
+        }
+
+        setTimeout(() => {
+            const errorMsg = document.querySelector('.error-message');
+            const successMsg = document.querySelector('.success-message');
+
+            if (errorMsg) {
+                errorMsg.style.opacity = '0';
+                errorMsg.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => errorMsg.remove(), 500);
+            }
+
+            if (successMsg) {
+                successMsg.style.opacity = '0';
+                successMsg.style.transition = 'opacity 0.5s ease';
+                setTimeout(() => successMsg.remove(), 500);
+            }
+        }, 5000);
+    </script>
+</body>
+
+</html>

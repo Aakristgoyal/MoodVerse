@@ -30,15 +30,22 @@
     <!-- Center: Search Bar -->
     <div class="navbar-section nav-search" id="navSearch">
       <form class="search-form" action="/search" method="GET">
-        <input type="text" name="query" placeholder="Search books..." />
+        <input type="text" name="query" placeholder="Search books..." required />
         <button type="submit">🔍</button>
       </form>
     </div>
 
     <!-- Right: Auth Links -->
     <div class="navbar-section auth-links" id="authLinks">
-      <a href="/login">Login</a>
-      <a href="/signup">Signup</a>
+      <% if (typeof loggedIn !== 'undefined' && loggedIn && user) { %>
+        <span class="greeting">Hi, <%= user.name %>!</span>
+        <form action="/logout" method="GET" style="display: inline;">
+          <button type="submit" class="logout-btn">Logout</button>
+        </form>
+      <% } else { %>
+        <a href="/login">Login</a>
+        <a href="/signup">Signup</a>
+      <% } %>
     </div>
 
   </header>

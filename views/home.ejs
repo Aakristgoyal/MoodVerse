@@ -1,0 +1,59 @@
+<!-- Hero Section -->
+<section class="home-hero">
+  <div class="hero-content">
+    <h1>Welcome to MoodVerse 📚</h1>
+    <p>Discover, share, and explore books based on your current mood. Whether you're feeling joyful, reflective, adventurous, or relaxed — we've got the perfect book for you.</p>
+    <% if (loggedIn) { %>
+      <a href="/books" class="btn btn-primary">Explore Your Books</a>
+    <% } else { %>
+      <div class="btn-group">
+        <a href="/login" class="btn btn-primary">Login</a>
+        <a href="/signup" class="btn btn-secondary">Signup</a>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<!-- Mood Categories -->
+<section class="mood-section">
+  <h2>Browse by Mood</h2>
+  <div class="mood-cards">
+    <div class="mood-card">😊 Happy</div>
+    <div class="mood-card">😢 Sad</div>
+    <div class="mood-card">😲 Thrilled</div>
+    <div class="mood-card">🤔 Thoughtful</div>
+    <div class="mood-card">❤️ Romantic</div>
+    <div class="mood-card">😴 Calm</div>
+  </div>
+</section>
+
+<!-- Featured Books Section -->
+<section class="featured-books">
+  <h2>Featured Books</h2>
+  <div class="book-grid">
+    <div class="book-card">
+      <img src="https://covers.openlibrary.org/b/id/8231856-L.jpg" alt="The Alchemist">
+      <h3>The Alchemist</h3>
+      <p>By Paulo Coelho</p>
+    </div>
+    <div class="book-card">
+      <img src="https://covers.openlibrary.org/b/id/9870656-L.jpg" alt="1984">
+      <h3>1984</h3>
+      <p>By George Orwell</p>
+    </div>
+    <div class="book-card">
+      <img src="https://covers.openlibrary.org/b/id/8675392-L.jpg" alt="Atomic Habits">
+      <h3>Atomic Habits</h3>
+      <p>By James Clear</p>
+    </div>
+  </div>
+</section>
+
+<!-- Call to Action -->
+<section class="cta-section">
+  <h2>Start Your Mood-Based Reading Journey</h2>
+  <p>Join MoodVerse and match your mood with meaningful reads.</p>
+  <% if (!loggedIn) { %>
+    <a href="/signup" class="btn btn-primary">Get Started</a>
+  <% } %>
+</section>

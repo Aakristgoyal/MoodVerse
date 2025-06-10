@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>All Books - MoodVerse</title>
@@ -10,19 +11,39 @@
   <!-- Main Content -->
   <main>
     <h1>All Books</h1>
-    <div class="book-container">
-      <% books.forEach(book => { %>
-        <div class="book-card">
-          <h3>
-            <a href="/books/<%= book._id %>" class="book-link"><%= book.title %></a>
-          </h3>
-          <p><strong>Author:</strong> <%= book.author %></p>
-          <p><strong>Mood:</strong> <%= book.moodtags.join(', ') %></p>
-          <p><%= book.desc %></p>
-          <p><em>Uploaded by: <%= book.uploadedBy %></em></p>
-        </div>
-      <% }) %>
-    </div>
+
+    <% if (books.length > 0) { %>
+      <div class="book-container">
+        <% books.forEach(book => { %>
+          <div class="book-card">
+            <h3>
+              <a href="/books/<%= book._id %>" class="book-link">
+                <%= book.title %>
+              </a>
+            </h3>
+
+            <p><strong>Author:</strong> <%= book.author %></p>
+
+            <div class="tags">
+              <% book.moodtags.forEach(tag => { %>
+                <span class="tag"><%= tag %></span>
+              <% }) %>
+            </div>
+
+            <p><strong>Mood:</strong> <%= book.moodtags.join(', ') %></p>
+            <p><%= book.desc %></p>
+            <p><em>Uploaded by: <%= book.uploadedBy %></em></p>
+          </div>
+        <% }) %>
+      </div>
+    <% } else { %>
+      <div class="no-results">
+        <h2>No results found.</h2>
+        <p>Try searching with a different keyword or check the spelling.</p>
+        <a href="/books" class="back-button">← Back to All Books</a>
+      </div>
+    <% } %>
   </main>
 </body>
+
 </html>
