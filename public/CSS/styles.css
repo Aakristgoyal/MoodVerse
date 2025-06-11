@@ -580,3 +580,45 @@ body {
   }
 }
 
+/* === My Books Empty State === */
+.empty-state-container {
+  text-align: center;
+  margin: 3rem auto;
+  color: #555;
+}
+
+.empty-state-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.empty-state-message {
+  margin-top: 0.5rem;
+  color: #666;
+  font-style: italic;
+}
+
+.empty-state-container .btn {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.6rem 1.2rem;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #333;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.empty-state-container .btn:hover {
+  background-color: #f0f0f0;
+}
+
+/* === Reinforce Original Book Grid Layout (to override overrides) === */
+.book-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+  padding: 20px 30px;
+}

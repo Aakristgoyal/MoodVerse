@@ -1,0 +1,7 @@
+<div class="empty-state-container">
+  <h2 class="empty-state-title">No results found.</h2>
+  <p class="empty-state-message"><%= typeof message !== "undefined" ? message : "Try searching with a different keyword or check the spelling." %></p>
+  <a href="<%= backUrl || '/books' %>" class="btn btn-secondary">
+    <%= backText || '← Back to All Books' %>
+  </a>
+</div>

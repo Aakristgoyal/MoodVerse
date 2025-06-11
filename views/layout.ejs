@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MoodVerse</title>
+  <title><%= typeof title !== 'undefined' ? title : 'MoodVerse' %></title>
   <link rel="stylesheet" href="/css/styles.css" />
 </head>
 <body>
@@ -23,6 +23,7 @@
     <nav class="navbar-section nav-links" id="navLinks">
       <a href="/">Home</a>
       <a href="/add-book">Add Book</a>
+      <a href="/my-books">My Books</a>
       <a href="/about">About</a>
       <a href="/contact">Contact</a>
     </nav>
@@ -51,9 +52,10 @@
   </header>
 
   <!-- Page Content -->
-  <main>
-    <%- body %>
+  <main class="main-content">
+  <%- body %>
   </main>
+
 
   <script>
     function toggleMenu() {

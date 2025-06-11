@@ -6,6 +6,10 @@ const expressLayouts = require('express-ejs-layouts');
 const session = require('express-session');
 const Book = require('./models/books');
 const port = 3000
+const methodOverride = require('method-override');
+app.use(methodOverride('_method'));
+
+
 
 // Middleware
 app.use(expressLayouts);

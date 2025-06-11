@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Books - MoodVerse</title>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <main class="book-list-container">
+    <h1 class="page-title">My Uploaded Books</h1>
+
+    <% if (books.length === 0) { %>
+      <div class="empty-state-container">
+        <h2 class="empty-state-title"><%= message || "No results found." %></h2>
+        <p class="empty-state-message">You haven't uploaded any books yet.</p>
+        <a href="/" class="btn btn-secondary">← Back to Home</a>
+      </div>
+    <% } else { %>
+      <div class="book-grid">
+        <% books.forEach(book => { %>
+          <div class="book-card">
+            <a href="/books/<%= book._id %>">
+              <h3><%= book.title %></h3>
+            </a>
+            <p>by <%= book.author %></p>
+            <% if (book.imageUrl) { %>
+              <img src="<%= book.imageUrl %>" alt="Book Cover" class="book-card-image">
+            <% } %>
+          </div>
+        <% }); %>
+      </div>
+    <% } %>
+  </main>
+</body>
+</html>

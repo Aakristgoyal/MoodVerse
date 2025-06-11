@@ -4,7 +4,6 @@ const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const Book = require('../models/books');
 
-// Middleware for session checking
 const requireAuth = (req, res, next) => {
     if (req.session && req.session.userId) {
         return next();
@@ -21,15 +20,14 @@ const redirectIfLoggedIn = (req, res, next) => {
     }
 };
 
-// Set global locals for views
+// Inject login info globally for views
 router.use((req, res, next) => {
     res.locals.loggedIn = !!req.session.userId;
     res.locals.user = req.session.user || null;
     next();
 });
 
-// GET Routes
-
+// Static Pages
 router.get('/', (req, res) => {
     res.render('home');
 });
@@ -42,6 +40,7 @@ router.get('/contact', (req, res) => {
     res.render('contact');
 });
 
+// Auth Pages
 router.get('/login', redirectIfLoggedIn, (req, res) => {
     res.render('login', {
         error: null,
@@ -58,8 +57,37 @@ router.get('/signup', redirectIfLoggedIn, (req, res) => {
     });
 });
 
+router.get('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) console.error('Logout error:', err);
+        res.redirect('/login');
+    });
+});
+
+// Book Routes
 router.get('/add-book', requireAuth, (req, res) => {
     res.render('addBook');
+});
+
+router.post('/add-book', requireAuth, async (req, res) => {
+    const { title, author, desc, moodtags } = req.body;
+    const tagsArray = moodtags.split(',').map(tag => tag.trim());
+
+    try {
+        const newBook = new Book({
+            title,
+            author,
+            desc,
+            moodtags: tagsArray,
+            uploadedBy: req.session.user.id 
+        });
+
+        await newBook.save();
+        res.redirect('/books');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Failed to save book');
+    }
 });
 
 router.get('/books', async (req, res) => {
@@ -72,19 +100,108 @@ router.get('/books', async (req, res) => {
     }
 });
 
+router.get('/my-books', async (req, res) => {
+  if (!req.session.loggedIn || !req.session.user) {
+    return res.redirect('/login');
+  }
+
+  try {
+    const books = await Book.find({ uploadedBy: req.session.user.id });
+
+    res.render('myBooks', {
+      title: 'My Books',
+      books,
+      loggedIn: req.session.loggedIn,
+      user: req.session.user
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error loading your books.');
+  }
+});
+
+
+// Route: GET /books/:id
 router.get('/books/:id', async (req, res) => {
     try {
-        const book = await Book.findById(req.params.id);
-        if (!book) return res.status(404).send('Book not found');
-        res.render('bookDetail', { book });
+        const book = await Book.findById(req.params.id).populate('uploadedBy');
+        if (!book) {
+            return res.status(404).send('Book not found');
+        }
+
+        res.render('bookDetail', {
+      book,
+      user: req.user,
+      loggedIn: req.isAuthenticated()
+    });
     } catch (err) {
         console.error(err);
-        res.status(500).send('Failed to load book details');
+        res.status(500).send('Internal Server Error');
     }
 });
 
-// POST Routes
+router.put('/books/:id', requireAuth, async (req, res) => {
+    try {
+        const { title, author, desc, moodtags } = req.body;
+        const book = await Book.findById(req.params.id);
+        if (!book) return res.status(404).send('Book not found');
 
+        if (book.uploadedBy.toString() !== req.session.user.id) {
+            return res.status(403).send('Unauthorized');
+        }
+
+        book.title = title;
+        book.author = author;
+        book.desc = desc;
+        book.moodtags = moodtags.split(',').map(tag => tag.trim());
+        await book.save();
+
+        res.redirect(`/books/${book._id}`);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Server error while updating book.');
+    }
+});
+// DELETE /books/:id
+router.delete('/books/:id', async (req, res) => {
+  try {
+    await Book.findByIdAndDelete(req.params.id);
+    res.redirect('/book-list'); // or '/' if you want to go to homepage
+  } catch (err) {
+    res.status(500).send('Error deleting the book.');
+  }
+});
+
+
+// Route: GET /books/:id/edit
+router.get('/books/:id/edit', requireAuth, async (req, res) => {
+    try {
+        const book = await Book.findById(req.params.id);
+        if (!book) {
+            return res.status(404).send('Book not found');
+        }
+
+        // Optional: Only allow user to edit their own books
+        if (book.uploadedBy.toString() !== req.session.user.id) {
+            return res.status(403).send('Unauthorized');
+        }
+
+        res.render('editBook', {
+      title: 'Edit Book',
+      book,
+      error: null,      // Always define
+      success: null,    // Always define
+      loggedIn: req.session.loggedIn,
+      user: req.session.user
+    });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Error loading edit form');
+    }
+});
+
+
+// Signup Logic
 router.post('/signup', async (req, res) => {
     const { name, email, password, confirmPassword } = req.body;
 
@@ -114,7 +231,6 @@ router.post('/signup', async (req, res) => {
         }
 
         const existingUser = await User.findOne({ email: email.toLowerCase() });
-
         if (existingUser) {
             return res.render('signup', {
                 error: 'An account with this email already exists',
@@ -151,6 +267,7 @@ router.post('/signup', async (req, res) => {
     }
 });
 
+// Login Logic
 router.post('/login', async (req, res) => {
     const { email, password, remember } = req.body;
 
@@ -201,36 +318,6 @@ router.post('/login', async (req, res) => {
             formData: { email }
         });
     }
-});
-
-router.post('/add-book', requireAuth, async (req, res) => {
-    const { title, author, desc, moodtags } = req.body;
-    const tagsArray = moodtags.split(',').map(tag => tag.trim());
-
-    try {
-        const newBook = new Book({
-            title,
-            author,
-            desc,
-            moodtags: tagsArray,
-            uploadedBy: req.session.user.name || 'Anonymous'
-        });
-
-        await newBook.save();
-        res.redirect('/books');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Failed to save book');
-    }
-});
-
-router.get('/logout', (req, res) => {
-    req.session.destroy(err => {
-        if (err) {
-            console.error('Logout error:', err);
-        }
-        res.redirect('/login');
-    });
 });
 
 module.exports = router;
