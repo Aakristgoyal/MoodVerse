@@ -1,59 +1,42 @@
-<!DOCTYPE html>
-<html lang="en">
+<%- include('partials/header') %>
+<main>
+  <div class="book-detail-container">
+    <h1 class="book-detail-title">
+      <%= book.title %>
+    </h1>
+    <p class="book-detail-author">by <%= book.author %></p>
 
-<head>
-  <meta charset="UTF-8">
-  <title>
-    <%= book.title %> - MoodVerse
-  </title>
-  <link rel="stylesheet" href="/css/styles.css">
-</head>
+    <% if (book.imageUrl) { %>
+      <img class="book-cover" src="<%= book.imageUrl %>" alt="<%= book.title %> cover">
+    <% } %>
 
-<body>
-  <main>
-    <div class="book-detail-container">
-      <h1 class="book-detail-title">
-        <%= book.title %>
-      </h1>
-      <p class="book-detail-author">by <%= book.author %>
-      </p>
+    <p class="book-detail-description">
+      <%= book.desc %>
+    </p>
 
-      <% if (book.imageUrl) { %>
-        <img class="book-cover" src="<%= book.imageUrl %>" alt="<%= book.title %> cover">
-        <% } %>
+    <% if (book.moodtags && book.moodtags.length > 0) { %>
+      <div class="book-detail-tags">
+        <% book.moodtags.forEach(tag => { %>
+          <span class="tag"><%= tag %></span>
+        <% }) %>
+      </div>
+    <% } %>
 
-          <p class="book-detail-description">
-            <%= book.desc %>
-          </p>
+    <p><em>Uploaded by: <%= book.uploadedBy?.name || "Anonymous" %></em></p>
 
-          <% if (book.moodtags && book.moodtags.length> 0) { %>
-            <div class="book-detail-tags">
-              <% book.moodtags.forEach(tag=> { %>
-                <span class="tag">
-                  <%= tag %>
-                </span>
-                <% }) %>
-            </div>
-            <% } %>
+    <!-- Edit and Delete Options (Only shown if showControls is true) -->
+    <% if (showControls) { %>
+      <div class="d-flex gap-2 mt-3">
+        <a href="/books/<%= book._id %>/edit" class="btn btn-warning">Edit</a>
 
-              <p><em>Uploaded by: <%= book.uploadedBy?.name || "Anonymous" %></em></p>
+        <form action="/books/<%= book._id %>?_method=DELETE" method="POST"
+          onsubmit="return confirm('Are you sure you want to delete this book?')">
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+      </div>
+    <% } %>
 
-              <!-- Edit and Delete Options (Only for uploader) -->
-              <% if (loggedIn && user && user.id.toString()===book.uploadedBy._id.toString()) { %>
-                <div class="d-flex gap-2 mt-3">
-                  <a href="/books/<%= book._id %>/edit" class="btn btn-warning">Edit</a>
-
-                  <form action="/books/<%= book._id %>?_method=DELETE" method="POST"
-                    onsubmit="return confirm('Are you sure you want to delete this book?')">
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                  </form>
-                </div>
-                <% } %>
-
-
-                  <a href="/books" class="book-detail-back">← Back to All Books</a>
-    </div>
-  </main>
-</body>
-
-</html>
+    <a href="/books" class="book-detail-back">← Back to All Books</a>
+  </div>
+</main>
+<%- include('partials/footer') %>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MoodVerse</title>
+  <link rel="stylesheet" href="/CSS/styles.css" />
+</head>
+<body>
+  <!-- Navbar -->
+  <div class="navbar">
+    <div class="logo">
+      <a href="/">MoodVerse</a>
+    </div>
+
+    <!-- Hamburger Icon (for mobile) -->
+    <div class="hamburger" onclick="toggleMenu()">☰</div>
+
+    <!-- Navigation Links -->
+    <div class="nav-right" id="navMenu">
+      <a href="/">Home</a>
+      <a href="/add-book">Add Book</a>
+      <a href="/my-books">My Books</a>
+      <a href="/about">About</a>
+      <a href="/contact">Contact</a>
+
+      <% if (loggedIn) { %>
+        <a href="/logout">Logout</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+      <% } %>
+    </div>
+
+    <!-- Search Bar -->
+    <form action="/search" method="GET" class="search-form">
+      <input
+        type="text"
+        name="query"
+        placeholder="Search books..."
+        class="search-input"
+      />
+      <button type="submit" class="search-button">🔍</button>
+    </form>
+  </div>
+
+  <main>

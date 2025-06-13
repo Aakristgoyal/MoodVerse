@@ -66,8 +66,22 @@ router.get('/logout', (req, res) => {
 
 // Book Routes
 router.get('/add-book', requireAuth, (req, res) => {
-    res.render('addBook');
+    const emptyBook = {
+        title: '',
+        author: '',
+        desc: '',
+        moodtags: ''
+    };
+
+    res.render('bookDetail', {
+        book: emptyBook,
+        user: req.session.user,
+        loggedIn: true,
+        showControls: false,
+        isNew: true // 🔁 Use this to conditionally show Add vs Update in bookDetail.ejs
+    });
 });
+
 
 router.post('/add-book', requireAuth, async (req, res) => {
     const { title, author, desc, moodtags } = req.body;
@@ -79,7 +93,7 @@ router.post('/add-book', requireAuth, async (req, res) => {
             author,
             desc,
             moodtags: tagsArray,
-            uploadedBy: req.session.user.id 
+            uploadedBy: req.session.userId
         });
 
         await newBook.save();
@@ -101,19 +115,21 @@ router.get('/books', async (req, res) => {
 });
 
 router.get('/my-books', async (req, res) => {
-  if (!req.session.loggedIn || !req.session.user) {
+  if (!req.session || !req.session.userId) {
     return res.redirect('/login');
-  }
+}
 
   try {
     const books = await Book.find({ uploadedBy: req.session.user.id });
 
     res.render('myBooks', {
-      title: 'My Books',
-      books,
-      loggedIn: req.session.loggedIn,
-      user: req.session.user
+        title: 'My Books',
+        books,
+        loggedIn: true,
+        user: req.session.user,
+        isOwnerView: true
     });
+
   } catch (err) {
     console.error(err);
     res.status(500).send('Error loading your books.');
@@ -122,6 +138,7 @@ router.get('/my-books', async (req, res) => {
 
 
 // Route: GET /books/:id
+// Route: GET /books/:id
 router.get('/books/:id', async (req, res) => {
     try {
         const book = await Book.findById(req.params.id).populate('uploadedBy');
@@ -129,16 +146,22 @@ router.get('/books/:id', async (req, res) => {
             return res.status(404).send('Book not found');
         }
 
+        // Determine if the current user is the owner of the book
+        const showControls = req.session.userId && book.uploadedBy && book.uploadedBy._id.toString() === req.session.userId;
+
         res.render('bookDetail', {
-      book,
-      user: req.user,
-      loggedIn: req.isAuthenticated()
-    });
+            book,
+            user: req.session.user,
+            loggedIn: !!req.session.userId,
+            showControls // ✅ Now defined
+        });
+
     } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
 });
+
 
 router.put('/books/:id', requireAuth, async (req, res) => {
     try {
@@ -163,14 +186,22 @@ router.put('/books/:id', requireAuth, async (req, res) => {
     }
 });
 // DELETE /books/:id
-router.delete('/books/:id', async (req, res) => {
+router.delete('/books/:id', requireAuth, async (req, res) => {
   try {
-    await Book.findByIdAndDelete(req.params.id);
-    res.redirect('/book-list'); // or '/' if you want to go to homepage
+    const book = await Book.findById(req.params.id);
+    if (!book) return res.status(404).send('Book not found');
+
+    if (book.uploadedBy.toString() !== req.session.user.id) {
+      return res.status(403).send('Unauthorized');
+    }
+
+    await book.deleteOne();
+    res.redirect('/my-books');
   } catch (err) {
     res.status(500).send('Error deleting the book.');
   }
 });
+
 
 
 // Route: GET /books/:id/edit

@@ -1,14 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <title>Add a Book</title>
-  <link rel="stylesheet" href="/css/styles.css">
-</head>
-
-<body>
-
+<%- include('partials/header') %>
   <form action="/add-book" method="POST" class="book-form">
     <input name="title" required placeholder="Title" />
     <input name="author" required placeholder="Author" />
@@ -17,7 +7,4 @@
     <input name="uploadedBy" placeholder="Your name" />
     <button type="submit">Submit Book</button>
   </form>
-
-</body>
-
-</html>
+<%- include('partials/footer') %>
