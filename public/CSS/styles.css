@@ -1,26 +1,44 @@
 /* ========== Base ========== */
+*{
+  box-sizing: border-box;
+}
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   margin: 0;
   padding: 0;
   background-color: #f9f9f9;
+  overflow-x: hidden;
 }
 
 /* ========== Book List Styling ========== */
 .book-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 24px;
-  padding: 20px 30px;
+  padding: 20px 16px;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .book-card {
   background: white;
-  padding: 20px;
+  padding: 16px;
   border-radius: 10px;
   border: 1px solid #ddd;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  text-align: center;
+  overflow: hidden;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.book-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+  display: block;
 }
 
 .book-card:hover {
@@ -28,6 +46,34 @@ body {
   box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
 }
 
+@media (max-width: 768px) {
+  .book-container {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .book-container {
+    grid-template-columns: 1fr;
+    padding: 10px;
+    gap: 16px; /* Use gap instead of margin */
+    max-width: 100%; /* Changed from 200px */
+  }
+
+  .book-card {
+    width: 100%;
+    margin: 0; /* Removed margin */
+    box-sizing: border-box;
+    /* Removed max-width: 180px */
+  }
+
+  body {
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+  }
+}
 .book-link {
   text-decoration: none;
   color: #4caf50;
@@ -172,6 +218,15 @@ body {
   align-items: center;
 }
 
+.nav-right a {
+  padding: 10px;
+  margin: 5px 0;
+}
+
+.nav-links.show {
+  display: flex !important;
+}
+
 .logo a {
   font-size: 22px;
   font-weight: bold;
@@ -180,19 +235,18 @@ body {
 }
 
 .nav-links {
+  display: flex;
   justify-content: center;
   flex: 2 1 auto;
 }
 
-.nav-links a,
-.auth-links a {
+.nav-links a{
   color: white;
   text-decoration: none;
   font-weight: bold;
 }
 
-.nav-links a:hover,
-.auth-links a:hover {
+.nav-links a:hover {
   text-decoration: underline;
 }
 
@@ -225,19 +279,17 @@ body {
   cursor: pointer;
   font-size: 16px;
 }
-
-.auth-links {
-  justify-content: flex-end;
-  gap: 10px;
+/* Hamburger icon */
+.hamburger {
+  display: none;
+  font-size: 28px;
+  color: white;
+  cursor: pointer;
 }
 
 /* ========== Responsive ========== */
-@media (max-width: 768px) {
-  .navbar {
-    flex-direction: column;
-    align-items: stretch;
-  }
 
+@media (max-width: 768px) {
   .navbar-section {
     justify-content: center;
     margin: 10px 0;
@@ -251,15 +303,17 @@ body {
 
   .hamburger {
     display: block;
-    align-self: flex-end;
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    z-index: 9999;
   }
 
   .nav-right {
     width: 100%;
   }
 
-  .nav-links,
-  .auth-links {
+  .nav-links {
     display: none;
     flex-direction: column;
     width: 100%;
@@ -277,28 +331,13 @@ body {
     width: 100%;
     max-width: 200px;
   }
-
-  .auth-links {
-    align-items: flex-end;
-  }
-
-  .book-container {
-    grid-template-columns: 1fr;
-    padding: 15px;
-  }
 }
 
-/* Hamburger icon */
-.hamburger {
-  display: none;
-  font-size: 28px;
-  color: white;
-  cursor: pointer;
-}
 
-.nav-links.show,
-.auth-links.show {
+
+.nav-links.show {
   display: flex !important;
+  flex-direction: column;
 }
 
 /* Mobile Book Form Adjustments */
@@ -569,10 +608,9 @@ body {
   margin-bottom: 0.8rem;
 }
 
-/* CTA Section */
 .cta-section {
   background: #ffe9c8;
-  padding: 3rem 2rem;
+  padding: 1rem 2rem; 
   text-align: center;
   margin-bottom: 0;
 }
@@ -585,6 +623,29 @@ body {
 .cta-section p {
   font-size: 1.1rem;
   margin-bottom: 1.5rem;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .cta-section {
+    padding: 1rem 1rem; /* Even smaller on mobile */
+  }
+  
+  .cta-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+  }
+  
+  .cta-section p {
+    font-size: 1rem;
+    margin-bottom: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .cta-section {
+    padding: 0.8rem 1rem; /* Minimal spacing on small screens */
+  }
 }
 
 @media (max-width: 768px) {
