@@ -3,6 +3,11 @@ const router = express.Router();
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const Book = require('../models/books');
+const Query=require('../models/query');
+const moment = require('moment-timezone');
+
+const istDate = moment().tz("Asia/Kolkata").format();  // ISO format with IST time
+
 
 const requireAuth = (req, res, next) => {
     if (req.session && req.session.userId) {
@@ -33,8 +38,10 @@ router.get('/', (req, res) => {
 });
 
 router.get('/about', (req, res) => {
-    res.render('about');
+  const messages = req.flash('success');
+  res.render('about', { messages });
 });
+
 
 router.get('/contact', (req, res) => {
     res.render('contact');
@@ -82,6 +89,52 @@ router.get('/add-book', requireAuth, (req, res) => {
     });
 });
 
+router.post('/submit-query', async (req, res) => {
+  const { name, email, message } = req.body;
+
+  try {
+    const existing = await Query.findOne({ email, message });
+
+    if (existing) {
+      req.flash('info', 'You have already submitted this message.');
+    } else {
+      const newQuery = new Query({ name, email, message });
+      await newQuery.save();
+      req.flash('success', 'Message delivered successfully!');
+    }
+
+    res.redirect('/about');
+  } catch (err) {
+    console.error('Error submitting query:', err);
+    req.flash('error', 'Something went wrong. Please try again.');
+    res.redirect('/about');
+  }
+});
+
+
+router.post('/query', async (req, res) => {
+  const { name, email, message } = req.body;
+
+  try {
+    // Check for duplicate query
+    const duplicate = await Query.findOne({ name, email, message });
+    if (duplicate) {
+      req.flash('error_msg', 'You have already submitted this message.');
+      return res.redirect('/about'); // or wherever your contact form is
+    }
+
+    // Save new query
+    const newQuery = new Query({ name, email, message });
+    await newQuery.save();
+
+    req.flash('success_msg', 'Your message has been sent successfully!');
+    res.redirect('/about');
+  } catch (err) {
+    console.error(err);
+    req.flash('error_msg', 'Something went wrong. Please try again.');
+    res.redirect('/about');
+  }
+});
 
 router.post('/add-book', requireAuth, async (req, res) => {
     const { title, author, desc, moodtags } = req.body;

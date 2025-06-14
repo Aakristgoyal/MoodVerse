@@ -6,6 +6,24 @@ const session = require('express-session');
 const methodOverride = require('method-override');
 const Book = require('./models/books');
 const bookRoutes = require('./routes/bookRoutes');
+const flash = require('connect-flash');
+
+app.use(session({
+  secret: 'yourSecretKey',
+  resave: false,
+  saveUninitialized: true
+}));
+
+app.use(flash());
+
+// Make flash messages available in all templates
+app.use((req, res, next) => {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  next();
+});
+
+
 
 const port = 3000;
 
