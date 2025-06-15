@@ -6,7 +6,11 @@ const bookSchema = new Schema({
   desc: { type: String },
   author: { type: String, required: true },
   moodtags: { type: [String], required: true },
-  uploadedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true }
+  uploadedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  coverImage:{
+    type:String,
+    default:'/uploads/default-cover.jpg'
+  }
 });
 
 module.exports = mongoose.model("Book", bookSchema);

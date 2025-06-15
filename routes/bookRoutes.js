@@ -5,9 +5,36 @@ const bcrypt = require('bcrypt');
 const Book = require('../models/books');
 const Query=require('../models/query');
 const moment = require('moment-timezone');
+const multer=require('multer');
+const path=require('path');
 
 const istDate = moment().tz("Asia/Kolkata").format();  // ISO format with IST time
 
+// Define where and how to store the uploaded files
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/'); // Make sure this folder exists
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)); // unique filename
+  }
+});
+const upload = multer({
+  storage,
+  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
+  fileFilter: function (req, file, cb) {
+    // Accept JPEG and PNG only
+    const filetypes = /jpeg|jpg|png/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
+
+    if (mimetype && extname) {
+      cb(null, true);
+    } else {
+      cb(null, false); // silently ignore other types
+    }
+  }
+});
 
 const requireAuth = (req, res, next) => {
     if (req.session && req.session.userId) {
@@ -73,19 +100,9 @@ router.get('/logout', (req, res) => {
 
 // Book Routes
 router.get('/add-book', requireAuth, (req, res) => {
-    const emptyBook = {
-        title: '',
-        author: '',
-        desc: '',
-        moodtags: ''
-    };
-
-    res.render('bookDetail', {
-        book: emptyBook,
+    res.render('addBook', {
         user: req.session.user,
-        loggedIn: true,
-        showControls: false,
-        isNew: true // 🔁 Use this to conditionally show Add vs Update in bookDetail.ejs
+        loggedIn: true
     });
 });
 
@@ -136,26 +153,30 @@ router.post('/query', async (req, res) => {
   }
 });
 
-router.post('/add-book', requireAuth, async (req, res) => {
-    const { title, author, desc, moodtags } = req.body;
-    const tagsArray = moodtags.split(',').map(tag => tag.trim());
+router.post('/add-book', requireAuth, upload.single('coverImage'), async (req, res) => {
+  const { title, author, desc, moodtags } = req.body;
+  const tagsArray = moodtags.split(',').map(tag => tag.trim());
 
-    try {
-        const newBook = new Book({
-            title,
-            author,
-            desc,
-            moodtags: tagsArray,
-            uploadedBy: req.session.userId
-        });
+  try {
+    const coverImagePath = req.file ? '/uploads/' + req.file.filename : null;
 
-        await newBook.save();
-        res.redirect('/books');
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Failed to save book');
-    }
+    const newBook = new Book({
+      title,
+      author,
+      desc,
+      moodtags: tagsArray,
+      coverImage: coverImagePath,
+      uploadedBy: req.session.userId
+    });
+
+    await newBook.save();
+    res.redirect('/books');
+  } catch (err) {
+    console.error('Error uploading book:', err);
+    res.status(500).send('Failed to save book');
+  }
 });
+
 
 router.get('/books', async (req, res) => {
     try {
