@@ -1,28 +1,39 @@
 <%- include('partials/header') %>
-  <main class="book-list-container">
-    <h1 class="page-title">My Uploaded Books</h1>
 
-    <% if (books.length === 0) { %>
-      <div class="empty-state-container">
-        <h2 class="empty-state-title"><%= message || "No results found." %></h2>
-        <p class="empty-state-message">You haven't uploaded any books yet.</p>
-        <a href="/" class="btn btn-secondary">← Back to Home</a>
-      </div>
-    <% } else { %>
-      <div class="book-grid">
-        <% books.forEach(book => { %>
-          <div class="book-card">
-            <a href="/books/<%= book._id %>">
-              <h3><%= book.title %></h3>
-            </a>
-            <p>by <%= book.author %></p>
-            <% if (book.imageUrl) { %>
-              <img src="<%= book.imageUrl %>" alt="Book Cover" class="book-card-image">
-            <% } %>
+<main class="book-list-container">
+  <h1 class="page-title">My Uploaded Books</h1>
+
+  <% if (books.length === 0) { %>
+    <div class="empty-state-container">
+      <h2 class="empty-state-title"><%= message || "No results found." %></h2>
+      <p class="empty-state-message">You haven't uploaded any books yet.</p>
+      <a href="/" class="btn btn-secondary">← Back to Home</a>
+    </div>
+  <% } else { %>
+    <div class="book-grid">
+      <% books.forEach(book => { %>
+        <div class="book-card">
+          <a href="/books/<%= book._id %>">
+            <h3><%= book.title %></h3>
+          </a>
+          <p>by <%= book.author %></p>
+          
+          <% if (book.imageUrl) { %>
+            <img src="<%= book.imageUrl %>" alt="Book Cover" class="book-card-image">
+          <% } %>
+
+          <!-- Button Group for Edit & Delete -->
+          <div class="book-action-buttons">
+            <a href="/books/<%= book._id %>/edit" class="btn btn-edit">Edit</a>
+
+            <form action="/books/<%= book._id %>?_method=DELETE" method="POST" style="display:inline;">
+              <button type="submit" class="btn btn-delete">Delete</button>
+            </form>
           </div>
-        <% }); %>
-      </div>
-    <% } %>
-  </main>
-<%- include('partials/footer') %>
+        </div>
+      <% }); %>
+    </div>
+  <% } %>
+</main>
 
+<%- include('partials/footer') %>
