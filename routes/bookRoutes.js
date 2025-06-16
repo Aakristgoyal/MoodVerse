@@ -201,7 +201,8 @@ router.get('/my-books', async (req, res) => {
         books,
         loggedIn: true,
         user: req.session.user,
-        isOwnerView: true
+        isOwnerView: true,
+        message: books.length === 0 ? 'No results found.' : null
     });
 
   } catch (err) {
