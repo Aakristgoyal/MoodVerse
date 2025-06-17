@@ -1,44 +1,58 @@
 <%- include('partials/header') %>
-  <div class="container mt-5">
-    <% if (typeof error !== 'undefined' && error) { %>
-      <div class="alert alert-danger"><%= error %></div>
-    <% } %>
 
-    <% if (typeof success !== 'undefined' && success) { %>
-      <div class="alert alert-success"><%= success %></div>
-    <% } %>
+<div class="container mt-5">
+  <% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+  <% } %>
 
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-        <h2 class="text-center mb-4">Edit Book</h2>
+  <% if (typeof success !== 'undefined' && success) { %>
+    <div class="alert alert-success"><%= success %></div>
+  <% } %>
 
-        <form action="/books/<%= book._id %>?_method=PUT" method="POST" class="card shadow p-4">
-          <div class="mb-3">
-            <label for="title" class="form-label">Title</label>
-            <input type="text" id="title" name="title" class="form-control" value="<%= book.title %>" required>
-          </div>
+  <div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+      <h2 class="text-center mb-5 fw-bold">Edit Book</h2>
 
-          <div class="mb-3">
-            <label for="author" class="form-label">Author</label>
-            <input type="text" id="author" name="author" class="form-control" value="<%= book.author %>" required>
-          </div>
+      <form action="/books/<%= book._id %>?_method=PUT" method="POST" enctype="multipart/form-data" class="card shadow p-5 rounded-4">
+        
+        <!-- Title -->
+        <div class="mb-4">
+          <label for="title" class="form-label fw-semibold">📖 Title</label>
+          <input type="text" id="title" name="title" class="form-control form-control-lg" value="<%= book.title %>" required>
+        </div>
 
-          <div class="mb-3">
-            <label for="desc" class="form-label">Description</label>
-            <textarea id="desc" name="desc" class="form-control" rows="4" required><%= book.desc %></textarea>
-          </div>
+        <!-- Author -->
+        <div class="mb-4">
+          <label for="author" class="form-label fw-semibold">✍️ Author</label>
+          <input type="text" id="author" name="author" class="form-control form-control-lg" value="<%= book.author %>" required>
+        </div>
 
-          <div class="mb-3">
-            <label for="moodtags" class="form-label">Mood Tags (comma-separated)</label>
-            <input type="text" id="moodtags" name="moodtags" class="form-control" value="<%= book.moodtags.join(', ') %>">
-          </div>
+        <!-- Description -->
+        <div class="mb-4">
+          <label for="desc" class="form-label fw-semibold">📝 Description</label>
+          <textarea id="desc" name="desc" class="form-control form-control-lg" rows="5" required><%= book.desc %></textarea>
+        </div>
 
-          <div class="text-end">
-            <button type="submit" class="btn btn-primary px-4">Save Changes</button>
-            <a href="/books/<%= book._id %>" class="btn btn-secondary ms-2">Cancel</a>
-          </div>
-        </form>
-      </div>
+        <!-- Mood Tags -->
+        <div class="mb-4">
+          <label for="moodtags" class="form-label fw-semibold">🏷️ Mood Tags (comma-separated)</label>
+          <input type="text" id="moodtags" name="moodtags" class="form-control form-control-lg" value="<%= book.moodtags.join(', ') %>">
+        </div>
+
+        <!-- Cover Image Upload -->
+        <div class="mb-4">
+          <label for="coverImage" class="form-label fw-semibold">🖼️ Change Cover Image (Max 2MB)</label>
+          <input type="file" id="coverImage" name="coverImage" accept="image/png, image/jpeg" class="form-control form-control-lg">
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-end mt-4 gap-3">
+          <button type="submit" class="btn btn-success px-4">💾 Save Changes</button>
+          <a href="/books/<%= book._id %>" class="btn btn-outline-secondary">← Cancel</a>
+        </div>
+      </form>
     </div>
   </div>
+</div>
+
 <%- include('partials/footer') %>

@@ -16,13 +16,17 @@ main {
 /* ========== Book List Styling ========== */
 .book-author {
   font-size: 14px;
-  color: #555;
+  color: #333;
   margin-top: 5px;
 }
 
 .book-card h3 {
-  font-size: 18px;
+  /* font-size: 28px; */
+  font-weight: 700;
   color: #333;
+}
+.book-card p{
+  font-size: 18px;
 }
 
 .book-container {
@@ -48,12 +52,16 @@ main {
   max-width: 100%;
   box-sizing: border-box;
 }
+.book-img{
+  padding: 20px;
+}
 
 .book-card img {
   width: 100%;
-  height: 480px;
+  height: 500px;
   border-radius: 16px;
-  object-fit:contain;
+  object-fit:cover;
+  object-position: top;
   display: block;
 }
 
@@ -71,6 +79,9 @@ main {
   }
   .book-card img.book-card-image {
     height: 200px;
+    object-fit: cover;
+    object-position: top;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   .book-card h3 {
@@ -108,8 +119,8 @@ main {
   }
 }
 .book-link {
+  color: #333;
   text-decoration: none;
-  color: #4caf50;
 }
 
 .book-link:hover {
@@ -216,6 +227,19 @@ main {
 }
 
 /* ========== NAVBAR ========== */
+.navbar {
+  position: sticky !important;
+  top: 0;
+  z-index: 9999;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  background-color: #4caf50;
+  color: white;
+}
+
 .navbar a {
   text-decoration: none;
   color: #fff;
@@ -227,19 +251,6 @@ main {
 
 .navbar a:hover {
   background-color: rgba(255, 255, 255, 0.15);
-}
-
-.navbar {
-  position: sticky;
-  top: 0;
-  z-index: 1000;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 24px;
-  background-color: #4caf50;
-  color: white;
 }
 
 .navbar-section {
@@ -497,9 +508,11 @@ main {
 /* Optional: Book Cover Image */
 .book-cover {
   max-width: 100%;
-  height: auto;
+  height: 500px;
   margin-bottom: 20px;
   border-radius: 8px;
+  object-fit:cover;
+  object-position: top;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 

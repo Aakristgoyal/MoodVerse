@@ -9,12 +9,13 @@
         <div class="book-card">
 
           <!-- ✅ Book Cover -->
+           <div class="book-img">
           <% if (book.coverImage) { %>
             <img src="<%= book.coverImage %>" alt="Cover for <%= book.title %>" class="book-card-image" />
           <% } else { %>
             <img src="/images/default-book.png" alt="Default Book Cover" class="book-card-image" />
           <% } %>
-
+          </div>
           <!-- ✅ Title and Author only -->
           <h3>
             <a href="/books/<%= book._id %>" class="book-link">

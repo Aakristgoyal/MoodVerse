@@ -9,7 +9,11 @@ const bookSchema = new Schema({
   uploadedBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   coverImage:{
     type:String,
-    default:'/uploads/default-cover.png'
+    default:'/uploads/images/default-cover.png'
+  },
+  pdfPath:{
+    type:String,
+    required:false
   }
 });
 

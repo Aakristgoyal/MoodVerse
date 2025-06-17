@@ -7,34 +7,10 @@ const Query=require('../models/query');
 const moment = require('moment-timezone');
 const multer=require('multer');
 const path=require('path');
+const { uploadImage, uploadPDF,uploadBookFiles } = require('../routes/upload');
 
 const istDate = moment().tz("Asia/Kolkata").format();  // ISO format with IST time
 
-// Define where and how to store the uploaded files
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/uploads/'); // Make sure this folder exists
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)); // unique filename
-  }
-});
-const upload = multer({
-  storage,
-  limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
-  fileFilter: function (req, file, cb) {
-    // Accept JPEG and PNG only
-    const filetypes = /jpeg|jpg|png/;
-    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
-    const mimetype = filetypes.test(file.mimetype);
-
-    if (mimetype && extname) {
-      cb(null, true);
-    } else {
-      cb(null, false); // silently ignore other types
-    }
-  }
-});
 
 const requireAuth = (req, res, next) => {
     if (req.session && req.session.userId) {
@@ -128,55 +104,37 @@ router.post('/submit-query', async (req, res) => {
   }
 });
 
+router.post(
+  '/add-book',
+  requireAuth,uploadBookFiles.fields([
+  { name: 'coverImage', maxCount: 1 },
+  { name: 'pdfFile', maxCount: 1 }
+]),
+  async (req, res) => {
+    try {
+      const { title, desc, author, moodtags } = req.body;
 
-router.post('/query', async (req, res) => {
-  const { name, email, message } = req.body;
+      const coverImage = req.files?.coverImage?.[0];
+      const pdfFile = req.files?.pdfFile?.[0];
 
-  try {
-    // Check for duplicate query
-    const duplicate = await Query.findOne({ name, email, message });
-    if (duplicate) {
-      req.flash('error_msg', 'You have already submitted this message.');
-      return res.redirect('/about'); // or wherever your contact form is
+      const newBook = new Book({
+        title,
+        desc,
+        author,
+        moodtags: moodtags.split(',').map(tag => tag.trim()),
+        uploadedBy: req.session.userId,
+        coverImage: coverImage ? `/uploads/images/${coverImage.filename}` : undefined,
+        pdfPath: pdfFile ? `/uploads/pdfs/${pdfFile.filename}` : undefined
+      });
+
+      await newBook.save();
+      res.redirect('/books');
+    } catch (err) {
+      console.error("Book upload failed:", err);
+      res.status(500).send('Error uploading book.');
     }
-
-    // Save new query
-    const newQuery = new Query({ name, email, message });
-    await newQuery.save();
-
-    req.flash('success_msg', 'Your message has been sent successfully!');
-    res.redirect('/about');
-  } catch (err) {
-    console.error(err);
-    req.flash('error_msg', 'Something went wrong. Please try again.');
-    res.redirect('/about');
   }
-});
-
-router.post('/add-book', requireAuth, upload.single('coverImage'), async (req, res) => {
-  const { title, author, desc, moodtags } = req.body;
-  const tagsArray = moodtags.split(',').map(tag => tag.trim());
-
-  try {
-    const coverImagePath = req.file ? '/uploads/' + req.file.filename : null;
-
-    const newBook = new Book({
-      title,
-      author,
-      desc,
-      moodtags: tagsArray,
-      coverImage: coverImagePath,
-      uploadedBy: req.session.userId
-    });
-
-    await newBook.save();
-    res.redirect('/books');
-  } catch (err) {
-    console.error('Error uploading book:', err);
-    res.status(500).send('Failed to save book');
-  }
-});
-
+);
 
 router.get('/books', async (req, res) => {
     try {
@@ -211,8 +169,6 @@ router.get('/my-books', async (req, res) => {
   }
 });
 
-
-// Route: GET /books/:id
 // Route: GET /books/:id
 router.get('/books/:id', async (req, res) => {
     try {
@@ -237,8 +193,9 @@ router.get('/books/:id', async (req, res) => {
     }
 });
 
-
-router.put('/books/:id', requireAuth, async (req, res) => {
+router.put('/books/:id',
+    uploadImage.single('coverImage'),
+    requireAuth, async (req, res) => {
     try {
         const { title, author, desc, moodtags } = req.body;
         const book = await Book.findById(req.params.id);
@@ -252,8 +209,10 @@ router.put('/books/:id', requireAuth, async (req, res) => {
         book.author = author;
         book.desc = desc;
         book.moodtags = moodtags.split(',').map(tag => tag.trim());
+        if (req.file) {
+            book.coverImage = `/uploads/images/${req.file.filename}`;
+        }
         await book.save();
-
         res.redirect(`/books/${book._id}`);
     } catch (err) {
         console.error(err);
@@ -286,8 +245,6 @@ router.get('/books/:id/edit', requireAuth, async (req, res) => {
         if (!book) {
             return res.status(404).send('Book not found');
         }
-
-        // Optional: Only allow user to edit their own books
         if (book.uploadedBy.toString() !== req.session.user.id) {
             return res.status(403).send('Unauthorized');
         }
@@ -295,9 +252,9 @@ router.get('/books/:id/edit', requireAuth, async (req, res) => {
         res.render('editBook', {
       title: 'Edit Book',
       book,
-      error: null,      // Always define
-      success: null,    // Always define
-      loggedIn: req.session.loggedIn,
+      error: null,     
+      success: null,    
+      loggedIn: req.session.userId,
       user: req.session.user
     });
     } catch (err) {

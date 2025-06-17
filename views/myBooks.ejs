@@ -13,14 +13,15 @@
     <div class="book-grid">
       <% books.forEach(book => { %>
         <div class="book-card">
+           <% if (book.coverImage) { %>
+            <img src="<%= book.coverImage %>" alt="Cover of <%= book.title %>" class="book-card-image">
+          <% } else { %>
+            <img src="/images/default-cover.png" alt="Default book cover" class="book-card-image">
+          <% } %>
           <a href="/books/<%= book._id %>">
             <h3><%= book.title %></h3>
           </a>
           <p>by <%= book.author %></p>
-          
-          <% if (book.imageUrl) { %>
-            <img src="<%= book.imageUrl %>" alt="Book Cover" class="book-card-image">
-          <% } %>
 
           <!-- Button Group for Edit & Delete -->
           <div class="book-action-buttons">
