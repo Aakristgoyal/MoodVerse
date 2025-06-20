@@ -7,10 +7,10 @@ const Query=require('../models/query');
 const moment = require('moment-timezone');
 const multer=require('multer');
 const path=require('path');
+const axios=require('axios')
 const { uploadImage, uploadPDF,uploadBookFiles } = require('../routes/upload');
 
 const istDate = moment().tz("Asia/Kolkata").format();  // ISO format with IST time
-
 
 const requireAuth = (req, res, next) => {
     if (req.session && req.session.userId) {
@@ -36,9 +36,30 @@ router.use((req, res, next) => {
 });
 
 // Static Pages
-router.get('/', (req, res) => {
-    res.render('home');
+router.get('/', async (req, res) => {
+  try {
+    // Fetch Open Library featured books (e.g., popular titles or a fixed query)
+    const apiRes = await axios.get('https://openlibrary.org/search.json?q=harry+potter&limit=8');
+
+    const featuredBooks = apiRes.data.docs.map(book => ({
+      title: book.title,
+      author: book.author_name?.[0] || 'Unknown',
+      coverImage: book.cover_i
+        ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
+        : '/uploads/images/default-cover.png',
+      openLibraryLink: `https://openlibrary.org${book.key}`
+    }));
+
+    res.render('home', {
+      featuredBooks
+    });
+
+  } catch (err) {
+    console.error('Error fetching featured books:', err);
+    res.render('home', { featuredBooks: [] });
+  }
 });
+
 
 router.get('/about', (req, res) => {
   const messages = req.flash('success');
@@ -80,6 +101,49 @@ router.get('/add-book', requireAuth, (req, res) => {
         user: req.session.user,
         loggedIn: true
     });
+});
+
+router.get('/search', async (req, res) => {
+console.log("Search term received:", req.query.query); 
+
+  let query = req.query.query || '';  // this matches your form input
+
+  if (typeof query !== 'string' || query.trim() === '') {
+    return res.render('searchResults', {
+      localBooks: [],
+      apiBooks: [],
+      searchTerm: '',
+      message: 'Please enter a valid search term.'
+    });
+  }
+
+  query = query.trim(); // Ensure whitespace doesn't cause issues
+
+  try {
+    const localBooks = await Book.find({
+      title: { $regex: query, $options: 'i' }
+    });
+
+    const apiRes = await axios.get(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=10`);
+    const apiBooks = apiRes.data.docs.map(book => ({
+      title: book.title,
+      author: book.author_name?.[0] || 'Unknown',
+      coverImage: book.cover_i
+        ? `https://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg`
+        : '/uploads/images/default-cover.png',
+      source: 'openlibrary'
+    }));
+
+    res.render('searchResults', {
+      localBooks,
+      apiBooks,
+      searchTerm: query
+    });
+
+  } catch (err) {
+    console.error('Search error:', err);
+    res.status(500).send('Search failed');
+  }
 });
 
 router.post('/submit-query', async (req, res) => {
@@ -210,7 +274,8 @@ router.put('/books/:id',
         book.desc = desc;
         book.moodtags = moodtags.split(',').map(tag => tag.trim());
         if (req.file) {
-            book.coverImage = `/uploads/images/${req.file.filename}`;
+            book.coverImage = `/uploads/images/${
+                req.file.filename}`;
         }
         await book.save();
         res.redirect(`/books/${book._id}`);

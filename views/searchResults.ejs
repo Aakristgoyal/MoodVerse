@@ -1,0 +1,54 @@
+<%- include('partials/header') %>
+
+<div class="container mt-4">
+  <h2>Search Results for "<%= searchTerm %>"</h2>
+
+  <% if (localBooks.length > 0) { %>
+    <h3 class="mt-4">Your Uploaded Books</h3>
+    <div class="row">
+      <% localBooks.forEach(book => { %>
+        <div class="col-md-3">
+          <div class="card mb-4 shadow-sm">
+            <a href="/books/<%= book._id %>">
+              <img src="<%= book.coverImage || '/uploads/images/default-cover.png' %>" class="card-img-top" alt="Cover">
+              <div class="card-body">
+                <h5 class="card-title"><%= book.title %></h5>
+                <p class="card-text">by <%= book.author %></p>
+              </div>
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <% if (apiBooks.length > 0) { %>
+    <h3 class="mt-4">Books from Open Library</h3>
+    <div class="row">
+      <% apiBooks.forEach(book => { %>
+        <div class="col-md-3">
+          <div class="card mb-4 shadow-sm">
+            <a href="https://openlibrary.org/search?q=<%= encodeURIComponent(book.title) %>" target="_blank">
+              <img src="<%= book.coverImage %>" class="card-img-top" alt="Cover">
+              <div class="card-body">
+                <h5 class="card-title"><%= book.title %></h5>
+                <p class="card-text">by <%= book.author %></p>
+              </div>
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+
+  
+  <% if (localBooks.length === 0 && apiBooks.length === 0) { %>
+    <div class="text-center mt-5">
+      <h3 class="text-muted">No results found.</h3>
+      <p class="text-muted">Try searching with a different keyword or check the spelling.</p>
+      <a href="/books" class="btn btn-secondary mt-2">← Back to All Books</a>
+    </div>
+  <% } %>
+</div>
+
+<%- include('partials/footer') %>

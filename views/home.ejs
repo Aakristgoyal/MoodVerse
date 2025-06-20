@@ -30,25 +30,19 @@
 
 <!-- Featured Books Section -->
 <section class="featured-books">
-  <h2>Featured Books</h2>
+  <h2>📚 Featured Books </h2>
   <div class="book-grid">
-    <div class="book-card">
-      <img src="https://covers.openlibrary.org/b/id/8231856-L.jpg" alt="The Alchemist">
-      <h3>The Alchemist</h3>
-      <p>By Paulo Coelho</p>
-    </div>
-    <div class="book-card">
-      <img src="https://covers.openlibrary.org/b/id/9870656-L.jpg" alt="1984">
-      <h3>1984</h3>
-      <p>By George Orwell</p>
-    </div>
-    <div class="book-card">
-      <img src="https://covers.openlibrary.org/b/id/8675392-L.jpg" alt="Atomic Habits">
-      <h3>Atomic Habits</h3>
-      <p>By James Clear</p>
-    </div>
+    <% featuredBooks.forEach(book => { %>
+      <div class="book-card">
+        <img src="<%= book.coverImage %>" alt="Cover of <%= book.title %>" class="book-card-image">
+        <h4><%= book.title %></h4>
+        <p>by <%= book.author %></p>
+        <a href="<%= book.openLibraryLink %>" target="_blank" class="btn btn-primary">Read on Open Library</a>
+      </div>
+    <% }) %>
   </div>
 </section>
+
 
 <!-- Call to Action -->
 <section class="cta-section">

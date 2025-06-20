@@ -62,19 +62,6 @@ app.get('/test', (req, res) => {
     res.send('Express server is working');
 });
 
-// Search Route (still separate from bookRoutes)
-app.get("/search", async (req, res) => {
-    const query = req.query.query;
-    const books = await Book.find({
-        $or: [
-            { title: { $regex: query, $options: "i" } },
-            { author: { $regex: query, $options: "i" } },
-            { moodTags: { $regex: query, $options: "i" } }
-        ]
-    });
-    res.render("bookList", { books }); // Make sure bookList.ejs includes header/footer
-});
-
 // Book-related Routes
 app.use(bookRoutes);
 
