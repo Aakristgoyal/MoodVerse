@@ -41,8 +41,50 @@
     </div>
   <% } %>
 
-  
-  <% if (localBooks.length === 0 && apiBooks.length === 0) { %>
+  <% if (googleBooks && googleBooks.length > 0) { %>
+    <h3 class="mt-4">Books from Google Books</h3>
+    <div class="row">
+      <% googleBooks.forEach(book => { %>
+        <div class="col-md-3">
+          <div class="card mb-4 shadow-sm">
+            <a href="<%= book.link %>" target="_blank">
+              <img src="<%= book.coverImage %>" class="card-img-top" alt="Cover">
+              <div class="card-body">
+                <h5 class="card-title"><%= book.title %></h5>
+                <p class="card-text">by <%= book.author %></p>
+              </div>
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <% if (nytBooks && nytBooks.length > 0) { %>
+    <h3 class="mt-4">Books from New York Times</h3>
+    <div class="row">
+      <% nytBooks.forEach(book => { %>
+        <div class="col-md-3">
+          <div class="card mb-4 shadow-sm">
+            <a href="<%= book.link %>" target="_blank">
+              <img src="<%= book.coverImage %>" class="card-img-top" alt="Cover">
+              <div class="card-body">
+                <h5 class="card-title"><%= book.title %></h5>
+                <p class="card-text">by <%= book.author %></p>
+              </div>
+            </a>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } %>
+
+  <% if (
+    localBooks.length === 0 &&
+    apiBooks.length === 0 &&
+    (!googleBooks || googleBooks.length === 0) &&
+    (!nytBooks || nytBooks.length === 0)
+  ) { %>
     <div class="text-center mt-5">
       <h3 class="text-muted">No results found.</h3>
       <p class="text-muted">Try searching with a different keyword or check the spelling.</p>

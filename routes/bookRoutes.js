@@ -9,7 +9,7 @@ const multer=require('multer');
 const path=require('path');
 const axios=require('axios')
 const { uploadImage, uploadPDF,uploadBookFiles } = require('../routes/upload');
-
+require('dotenv').config();
 const istDate = moment().tz("Asia/Kolkata").format();  // ISO format with IST time
 
 const requireAuth = (req, res, next) => {
@@ -104,27 +104,31 @@ router.get('/add-book', requireAuth, (req, res) => {
 });
 
 router.get('/search', async (req, res) => {
-console.log("Search term received:", req.query.query); 
+  console.log("Search term received:", req.query.query); 
 
-  let query = req.query.query || '';  // this matches your form input
+  let query = req.query.query || '';
 
   if (typeof query !== 'string' || query.trim() === '') {
     return res.render('searchResults', {
       localBooks: [],
       apiBooks: [],
+      googleBooks: [],
+      nytBooks: [],
       searchTerm: '',
       message: 'Please enter a valid search term.'
     });
   }
 
-  query = query.trim(); // Ensure whitespace doesn't cause issues
+  query = query.trim();
 
   try {
+    // 1. Local books from MongoDB
     const localBooks = await Book.find({
       title: { $regex: query, $options: 'i' }
     });
 
-    const apiRes = await axios.get(`https://openlibrary.org/search.json?q=${encodeURIComponent(query)}&limit=10`);
+    // 2. Open Library API (no key needed)
+    const apiRes = await axios.get(`${process.env.OPEN_LIBRARY_BASE}/search.json?q=${encodeURIComponent(query)}&limit=10`);
     const apiBooks = apiRes.data.docs.map(book => ({
       title: book.title,
       author: book.author_name?.[0] || 'Unknown',
@@ -134,14 +138,45 @@ console.log("Search term received:", req.query.query);
       source: 'openlibrary'
     }));
 
+    // 3. Google Books API
+    const googleRes = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=10&key=${process.env.GOOGLE_BOOKS_API_KEY}`);
+    const googleBooks = (googleRes.data.items || []).map(item => ({
+      title: item.volumeInfo.title,
+      author: (item.volumeInfo.authors || ['Unknown'])[0],
+      coverImage: item.volumeInfo.imageLinks?.thumbnail || '/uploads/images/default-cover.png',
+      link: item.volumeInfo.infoLink,
+      source: 'googlebooks'
+    }));
+    // 4. NYT Books API — Flexible Title Search
+    let nytBooks = [];
+    try {
+      const nytRes = await axios.get(
+        `https://api.nytimes.com/svc/books/v3/lists/best-sellers/history.json?title=${encodeURIComponent(query)}&api-key=${process.env.NYT_BOOKS_API_KEY}`
+      );
+
+      nytBooks = (nytRes.data.results || []).map(book => ({
+        title: book.title,
+        author: book.author || 'Unknown',
+        coverImage: '/uploads/images/default-cover.png',
+        link: `https://www.nytimes.com/search?query=${encodeURIComponent(book.title)}`,
+        source: 'nytbooks'
+      }));
+    } catch (nytErr) {
+      console.warn('NYT API fallback triggered:', nytErr.response?.data?.errors || nytErr.message);
+      nytBooks = []; // You can optionally retry with another NYT endpoint here
+    }
+
+    // Render all sources together
     res.render('searchResults', {
       localBooks,
       apiBooks,
+      googleBooks,
+      nytBooks,
       searchTerm: query
     });
 
   } catch (err) {
-    console.error('Search error:', err);
+    console.error('Search error:', err.response?.data || err.message || err);
     res.status(500).send('Search failed');
   }
 });
