@@ -1,0 +1,73 @@
+<%- include('partials/header') %>
+
+<!-- Chat Container -->
+<div class="container-fluid d-flex flex-column p-0" style="height: 100vh;">
+
+  <!-- Title -->
+  <div class="bg-primary text-white px-4 py-2 shadow-sm">
+    <h4 class="mb-0">Chat with MoodVerse Bot</h4>
+  </div>
+
+  <!-- Chat Scrollable History -->
+  <div id="chat-box" class="flex-grow-1 overflow-auto px-3 py-3 bg-light">
+    <% if (chatHistory && chatHistory.length > 0) { %>
+      <% chatHistory.forEach(item => { %>
+        <% if (item.sender === "user") { %>
+          <div class="d-flex justify-content-end mb-2">
+            <div class="bg-success-subtle text-dark px-3 py-2 rounded-pill">
+              <strong>You:</strong> <%= item.text %>
+            </div>
+          </div>
+        <% } else if (item.sender === "bot" && item.text) { %>
+          <div class="d-flex justify-content-start mb-2">
+            <div class="bg-secondary-subtle text-dark px-3 py-2 rounded-pill">
+              <strong>MoodVerse Bot:</strong> <%= item.text %>
+            </div>
+          </div>
+        <% } else if (item.sender === "bot" && item.book) { %>
+          <div class="d-flex justify-content-start mb-3">
+            <div class="card shadow-sm" style="max-width: 540px; width: 100%;">
+              <div class="row g-0">
+                <div class="col-4">
+                  <img src="<%= item.book.coverImage || '/uploads/images/default-cover.png' %>" class="img-fluid h-100 rounded-start" alt="Cover" style="object-fit: cover;">
+                </div>
+                <div class="col-8">
+                  <div class="card-body py-2">
+                    <h6 class="card-title mb-1"><%= item.book.title %></h6>
+                    <a href="<%= item.book.link %>" class="btn btn-sm btn-outline-primary mt-1" target="_blank">View Book</a>
+                    <p class="card-text mt-1 mb-0"><small class="text-muted">Source: <%= item.book.source || "Unknown" %></small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% } %>
+      <% }) %>
+    <% } else { %>
+      <div class="alert alert-secondary">Start by saying hi or describing the type of book you want.</div>
+    <% } %>
+  </div>
+
+  <!-- Fixed Chat Input Bar -->
+  <div class="bg-white border-top p-3 position-fixed bottom-0 w-100">
+    <div class="container">
+      <form action="/chatbot/recommend" method="POST" class="input-group mb-2">
+        <input type="text" name="query" class="form-control" placeholder="Type your message..." required autocomplete="off">
+        <button type="submit" class="btn btn-primary">Send</button>
+      </form>
+      <form action="/chatbot/clear" method="POST" class="text-end">
+        <button type="submit" class="btn btn-sm btn-outline-danger">Clear Chat</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Scroll to bottom script -->
+<script>
+  const chatBox = document.getElementById("chat-box");
+  if (chatBox) {
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
+</script>
+
+<%- include('partials/footer', { hideChatIcon: true }) %>

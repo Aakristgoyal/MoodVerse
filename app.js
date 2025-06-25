@@ -4,28 +4,16 @@ const mongoose = require('mongoose');
 const path = require('path');
 const session = require('express-session');
 const methodOverride = require('method-override');
-const Book = require('./models/books');
-const bookRoutes = require('./routes/bookRoutes');
 const flash = require('connect-flash');
-
-app.use(session({
-  secret: 'yourSecretKey',
-  resave: false,
-  saveUninitialized: true
-}));
-
-app.use(flash());
-
-// Make flash messages available in all templates
-app.use((req, res, next) => {
-  res.locals.success = req.flash('success');
-  res.locals.error = req.flash('error');
-  next();
-});
-
-
+const bookRoutes = require('./routes/bookRoutes');
+const chatbotRoutes = require('./routes/chatbot');
 
 const port = 3000;
+
+// MongoDB Connection
+mongoose.connect("mongodb://localhost:27017/MoodVerse")
+  .then(() => console.log("MongoDB connected"))
+  .catch(err => console.log("MongoDB error:", err));
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));
@@ -33,39 +21,41 @@ app.use(express.json());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// ✅ Session Configuration (single and correct one)
+app.use(session({
+  secret: 'moodverse-secret-key-2024',
+  resave: false,
+  saveUninitialized: true, // ✅ required for guest users to maintain session
+  cookie: { maxAge: 24 * 60 * 60 * 1000 } // 1 day
+}));
+
+// Flash Messages
+app.use(flash());
+
+// Global Template Variables
+app.use((req, res, next) => {
+  res.locals.loggedIn = !!req.session.userId;
+  res.locals.currentUser = req.session.user || null;
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  res.locals.hideChatIcon = false;
+  next();
+});
+
 // View Engine Setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Session Configuration
-app.use(session({
-    secret: 'moodverse-secret-key-2024',
-    resave: false,
-    saveUninitialized: false,
-    cookie: { maxAge: 24 * 60 * 60 * 1000 } // 1 day
-}));
-
-// Pass session data to all views
-app.use((req, res, next) => {
-    res.locals.loggedIn = !!req.session.userId;
-    res.locals.currentUser = req.session.user || null;
-    next();
-});
-
-// MongoDB Connection
-mongoose.connect("mongodb://localhost:27017/MoodVerse")
-.then(() => console.log("MongoDB connected"))
-.catch(err => console.log("MongoDB error:", err));
+// Routes
+app.use(bookRoutes);
+app.use('/chatbot', chatbotRoutes);
 
 // Test Route
 app.get('/test', (req, res) => {
-    res.send('Express server is working');
+  res.send('Express server is working');
 });
-
-// Book-related Routes
-app.use(bookRoutes);
 
 // Start Server
 app.listen(port, () => {
-    console.log(`Server running on http://localhost:${port}`);
+  console.log(`Server running on http://localhost:${port}`);
 });
