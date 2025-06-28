@@ -6,17 +6,27 @@
     </h1>
     <p class="book-detail-author">by <%= book.author %></p>
 
-     <% if (book.coverImage) { %>
+    <% if (book.coverImage) { %>
       <img class="book-cover" src="<%= book.coverImage %>" alt="<%= book.title %> cover">
     <% } %>
 
     <p class="book-detail-description">
       <%= book.desc %>
     </p>
-    <% if (book.pdfPath) { %>
-      <a href="<%= book.pdfPath %>" class="btn btn-outline-primary mt-3" target="_blank">📖 Read Book (PDF)</a>
-    <% } %>
-    
+
+    <% if (book.pdfFile) { %>
+  <div class="book-pdf-view mt-3">
+    <a href="https://docs.google.com/gview?url=<%= book.pdfFile %>&embedded=true" 
+       target="_blank" 
+       rel="noopener noreferrer"
+       class="btn btn-primary">
+      📖 Read Book (PDF)
+    </a>
+  </div>
+<% } %>
+
+
+
     <% if (book.moodtags && book.moodtags.length > 0) { %>
       <div class="book-detail-tags">
         <% book.moodtags.forEach(tag => { %>
@@ -27,17 +37,14 @@
 
     <p><em>Uploaded by: <%= book.uploadedBy?.name || "Anonymous" %></em></p>
 
-    <!-- Edit and Delete Options (Only shown if showControls is true) -->
+    <!-- Edit and Delete Options -->
     <% if (showControls) { %>
       <div class="d-flex flex-wrap align-items-center gap-3 mt-4 mb-3">
         <a href="/books/<%= book._id %>/edit" class="btn btn-warning">Edit</a>
-
-      <form action="/books/<%= book._id %>?_method=DELETE" method="POST"
-        onsubmit="return confirm('Are you sure you want to delete this book?')">
-        <button type="submit" class="btn btn-danger">Delete</button>
-      </form>
-    </div>
-
+        <form action="/books/<%= book._id %>?_method=DELETE" method="POST" onsubmit="return confirm('Are you sure you want to delete this book?')">
+          <button type="submit" class="btn btn-danger">Delete</button>
+        </form>
+      </div>
     <% } %>
 
     <a href="/books" class="book-detail-back">← Back to All Books</a>

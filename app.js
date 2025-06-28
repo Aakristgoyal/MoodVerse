@@ -11,9 +11,9 @@ const chatbotRoutes = require('./routes/chatbot');
 const port = 3000;
 
 // MongoDB Connection
-mongoose.connect("mongodb://localhost:27017/MoodVerse")
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.log("MongoDB error:", err));
+mongoose.connect(process.env.MONGO_URI)
+  .then(() => console.log("✅ MongoDB connected"))
+  .catch(err => console.log("❌ MongoDB error:", err));
 
 // Middleware
 app.use(express.urlencoded({ extended: true }));

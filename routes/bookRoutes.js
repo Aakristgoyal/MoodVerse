@@ -5,10 +5,10 @@ const bcrypt = require('bcrypt');
 const Book = require('../models/books');
 const Query=require('../models/query');
 const moment = require('moment-timezone');
-const multer=require('multer');
 const path=require('path');
+const Busboy = require('busboy');
+const cloudinary = require('../routes/cloudinaryConfig');
 const axios=require('axios')
-const { uploadImage, uploadPDF,uploadBookFiles } = require('../routes/upload');
 require('dotenv').config();
 const istDate = moment().tz("Asia/Kolkata").format();  // ISO format with IST time
 
@@ -203,37 +203,94 @@ router.post('/submit-query', async (req, res) => {
   }
 });
 
-router.post(
-  '/add-book',
-  requireAuth,uploadBookFiles.fields([
-  { name: 'coverImage', maxCount: 1 },
-  { name: 'pdfFile', maxCount: 1 }
-]),
-  async (req, res) => {
+router.post('/add-book', requireAuth, async (req, res) => {
+  const busboy = Busboy({ headers: req.headers });
+
+  let coverImageUrl = '';
+  let pdfFileUrl = '';
+  const fields = {};
+
+  const uploads = [];
+  console.log('PDF URL:', pdfFileUrl);
+
+  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+    console.log(`Uploading file: ${filename}, field: ${fieldname}`);
+
+    const uploadPromise = new Promise((resolve, reject) => {
+      let cloudinaryStream;
+
+      if (fieldname === 'coverImage') {
+        cloudinaryStream = cloudinary.uploader.upload_stream(
+          { folder: 'moodverse/images', resource_type: 'image' },
+          (error, result) => {
+            if (error) {
+              console.error('Cloudinary image upload error:', error);
+              reject(error);
+            } else {
+              console.log('Image uploaded:', result.secure_url);
+              coverImageUrl = result.secure_url;
+              resolve();
+            }
+          }
+        );
+      } else if (fieldname === 'pdfFile') {
+        cloudinaryStream = cloudinary.uploader.upload_stream(
+          { folder: 'moodverse/pdfs', resource_type: 'auto',format:'pdf' },
+          (error, result) => {
+            if (error) {
+              console.error('Cloudinary PDF upload error:', error);
+              reject(error);
+            } else {
+              console.log('PDF uploaded:', result.secure_url);
+              pdfFileUrl = result.secure_url;
+              resolve();
+            }
+          }
+        );
+      } else {
+        // Ignore unexpected fields
+        file.resume();
+        return resolve();
+      }
+
+      file.pipe(cloudinaryStream);
+    });
+
+    uploads.push(uploadPromise);
+  });
+
+  busboy.on('field', (fieldname, val) => {
+    fields[fieldname] = val;
+  });
+
+  busboy.on('finish', async () => {
     try {
-      const { title, desc, author, moodtags } = req.body;
+      await Promise.all(uploads);
 
-      const coverImage = req.files?.coverImage?.[0];
-      const pdfFile = req.files?.pdfFile?.[0];
-
+      // ✅ Save book to MongoDB
       const newBook = new Book({
-        title,
-        desc,
-        author,
-        moodtags: moodtags.split(',').map(tag => tag.trim()),
+        title: fields.title,
+        author: fields.author,
+        desc: fields.desc,
+        moodtags: fields.moodtags.split(',').map(tag => tag.trim()),
         uploadedBy: req.session.userId,
-        coverImage: coverImage ? `/uploads/images/${coverImage.filename}` : undefined,
-        pdfPath: pdfFile ? `/uploads/pdfs/${pdfFile.filename}` : undefined
+        coverImage: coverImageUrl,
+        pdfFile: pdfFileUrl,
       });
 
       await newBook.save();
+
+      req.flash('success', 'Book added successfully with image and PDF!');
       res.redirect('/books');
     } catch (err) {
-      console.error("Book upload failed:", err);
-      res.status(500).send('Error uploading book.');
+      console.error('Error adding book:', err);
+      req.flash('error', 'Failed to add book');
+      res.redirect('/add-book');
     }
-  }
-);
+  });
+
+  req.pipe(busboy);
+});
 
 router.get('/books', async (req, res) => {
     try {
@@ -292,33 +349,98 @@ router.get('/books/:id', async (req, res) => {
     }
 });
 
-router.put('/books/:id',
-    uploadImage.single('coverImage'),
-    requireAuth, async (req, res) => {
-    try {
-        const { title, author, desc, moodtags } = req.body;
-        const book = await Book.findById(req.params.id);
-        if (!book) return res.status(404).send('Book not found');
+router.put('/books/:id', requireAuth, async (req, res) => {
+  const busboy = Busboy({ headers: req.headers });
+  const updates = {};
+  const uploads = [];
 
-        if (book.uploadedBy.toString() !== req.session.user.id) {
-            return res.status(403).send('Unauthorized');
-        }
+  let book;
 
-        book.title = title;
-        book.author = author;
-        book.desc = desc;
-        book.moodtags = moodtags.split(',').map(tag => tag.trim());
-        if (req.file) {
-            book.coverImage = `/uploads/images/${
-                req.file.filename}`;
-        }
-        await book.save();
-        res.redirect(`/books/${book._id}`);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Server error while updating book.');
+  try {
+    book = await Book.findById(req.params.id);
+    if (!book) return res.status(404).send('Book not found');
+    if (book.uploadedBy.toString() !== req.session.userId) {
+      return res.status(403).send('Unauthorized');
     }
+  } catch (err) {
+    console.error('Error finding book:', err);
+    return res.status(500).send('Server error');
+  }
+
+  busboy.on('field', (fieldname, val) => {
+    if (fieldname === 'moodtags') {
+      updates.moodtags = val.split(',').map(tag => tag.trim());
+    } else {
+      updates[fieldname] = val;
+    }
+  });
+
+  busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
+    console.log(`Uploading file: ${filename}, field: ${fieldname}`);
+
+    const uploadPromise = new Promise((resolve, reject) => {
+      let cloudinaryStream;
+
+      if (fieldname === 'coverImage') {
+        cloudinaryStream = cloudinary.uploader.upload_stream(
+          { folder: 'moodverse/images', resource_type: 'image' },
+          (error, result) => {
+            if (error) {
+              console.error('Image upload error:', error);
+              reject(error);
+            } else {
+              updates.coverImage = result.secure_url;
+              console.log('Cover image updated:', result.secure_url);
+              resolve();
+            }
+          }
+        );
+      } else if (fieldname === 'pdfFile') {
+        cloudinaryStream = cloudinary.uploader.upload_stream(
+          { folder: 'moodverse/pdfs', resource_type: 'auto' , format:'pdf'},
+          (error, result) => {
+            if (error) {
+              console.error('PDF upload error:', error);
+              reject(error);
+            } else {
+              updates.pdfFile = result.secure_url;
+              console.log('PDF updated:', result.secure_url);
+              resolve();
+            }
+          }
+        );
+      } else {
+        // Skip unexpected fields
+        file.resume();
+        return resolve();
+      }
+
+      file.pipe(cloudinaryStream);
+    });
+
+    uploads.push(uploadPromise);
+  });
+
+  busboy.on('finish', async () => {
+    try {
+      await Promise.all(uploads);
+
+      // ✅ Update book with new data
+      Object.assign(book, updates);
+      await book.save();
+
+      req.flash('success', 'Book updated successfully!');
+      res.redirect(`/books/${book._id}`);
+    } catch (err) {
+      console.error('Error updating book:', err);
+      req.flash('error', 'Failed to update book');
+      res.redirect(`/books/${book._id}/edit`);
+    }
+  });
+
+  req.pipe(busboy);
 });
+
 // DELETE /books/:id
 router.delete('/books/:id', requireAuth, async (req, res) => {
   try {

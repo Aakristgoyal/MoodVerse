@@ -11,7 +11,7 @@ const bookSchema = new Schema({
     type:String,
     default:'/uploads/images/default-cover.png'
   },
-  pdfPath:{
+  pdfFile:{
     type:String,
     required:false
   }
