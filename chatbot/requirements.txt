@@ -3,3 +3,5 @@ sentence-transformers
 torch
 scikit-learn
 pymongo
+requests
+python-dotenv
