@@ -6,16 +6,15 @@ const router = express.Router();
 router.get("/", (req, res) => {
     const loggedIn = req.session && req.session.userId;
 
-    // Initialize session chat history if not present
     if (!req.session.chatHistory) {
         req.session.chatHistory = [];
     }
 
     res.render("chatbot", {
         chatHistory: req.session.chatHistory,
-        query: "", // Always clear query on fresh page load
+        query: "",
         loggedIn,
-        hideChatIcon: true // 👈 Hide chatbot icon on this page
+        hideChatIcon: true
     });
 });
 
@@ -35,37 +34,43 @@ router.post("/recommend", async (req, res) => {
             }
         });
 
-
         const responseData = response.data;
 
-        // Initialize session chatHistory if not already
         if (!req.session.chatHistory) {
             req.session.chatHistory = [];
         }
 
-        // Add user message
         req.session.chatHistory.push({ sender: "user", text: userQuery });
 
-        // Add bot responses (text or book)
-        responseData.forEach(item => {
-            if (item.type === "message") {
-                req.session.chatHistory.push({ sender: "bot", text: item.text });
-            } else {
-                req.session.chatHistory.push({ sender: "bot", book: item });
-            }
-        });
+        if (Array.isArray(responseData)) {
+            responseData.forEach(item => {
+                if (item.type === "message") {
+                    req.session.chatHistory.push({ sender: "bot", text: item.text });
+                } else {
+                    req.session.chatHistory.push({ sender: "bot", book: item });
+                }
+            });
+        } else {
+            console.error("Unexpected ML API response:", responseData);
+            req.session.chatHistory.push({ sender: "bot", text: "⚠️ Sorry, I didn't understand that." });
+        }
 
-        // Render with updated chat history, clear input query
         res.render("chatbot", {
             chatHistory: req.session.chatHistory,
-            query: "", // 👈 Clear query
+            query: "",
             loggedIn,
-            hideChatIcon: true // 👈 Still hide chatbot icon
+            hideChatIcon: true
         });
 
     } catch (error) {
-        console.error("Error calling Flask service:", error.message);
-        res.status(500).send("Failed to fetch recommendations.");
+        console.error("Error calling Flask service:", error.message, error.response?.data);
+        req.session.chatHistory.push({ sender: "bot", text: "⚠️ Failed to fetch recommendations. Please try again later." });
+        res.render("chatbot", {
+            chatHistory: req.session.chatHistory,
+            query: "",
+            loggedIn,
+            hideChatIcon: true
+        });
     }
 });
 
