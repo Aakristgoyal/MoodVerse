@@ -35,6 +35,10 @@ router.use((req, res, next) => {
     next();
 });
 
+// Simple test route
+router.get('/test-simple', (req, res) => {
+    res.json({ message: 'Route is working' });
+});
 // Static Pages
 router.get('/', async (req, res) => {
   try {
