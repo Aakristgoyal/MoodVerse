@@ -7,8 +7,8 @@ const methodOverride = require('method-override');
 const flash = require('connect-flash');
 const bookRoutes = require('./routes/bookRoutes');
 const chatbotRoutes = require('./routes/chatbot');
-
-const port = 3000;
+const MongoStore = require('connect-mongo');
+const port = process.env.PORT || 3000;
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
@@ -25,8 +25,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(session({
   secret: 'moodverse-secret-key-2024',
   resave: false,
-  saveUninitialized: true, // ✅ required for guest users to maintain session
-  cookie: { maxAge: 24 * 60 * 60 * 1000 } // 1 day
+  saveUninitialized: false, // better security practice
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI, // your MongoDB connection string
+    ttl: 14 * 24 * 60 * 60 // sessions expire in 14 days
+  }),
+  cookie: {
+    maxAge: 14 * 24 * 60 * 60 * 1000 // 14 days in ms
+  }
 }));
 
 // Flash Messages

@@ -25,9 +25,16 @@ router.post("/recommend", async (req, res) => {
     const loggedIn = req.session && req.session.userId;
 
     try {
-        const response = await axios.post("http://localhost:5000/recommend", {
+        const mlApiUrl = process.env.ML_API_URL;
+
+        const response = await axios.post(mlApiUrl, {
             query: userQuery
+        }, {
+            headers: {
+                "Content-Type": "application/json"
+            }
         });
+
 
         const responseData = response.data;
 
