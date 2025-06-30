@@ -1,7 +1,7 @@
 const express = require("express");
 const axios = require("axios");
 const router = express.Router();
-
+require('dotenv').config();
 // GET chatbot form
 router.get("/", (req, res) => {
     const loggedIn = req.session && req.session.userId;
