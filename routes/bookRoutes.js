@@ -42,7 +42,6 @@ router.get('/test-simple', (req, res) => {
 // Static Pages
 router.get('/', async (req, res) => {
   try {
-    // Fetch Open Library featured books (e.g., popular titles or a fixed query)
     const apiRes = await axios.get('https://openlibrary.org/search.json?q=harry+potter&limit=8');
 
     const featuredBooks = apiRes.data.docs.map(book => ({
@@ -54,13 +53,19 @@ router.get('/', async (req, res) => {
       openLibraryLink: `https://openlibrary.org${book.key}`
     }));
 
-    res.render('home', {
-      featuredBooks
-    });
-
+    res.render('home', { featuredBooks });
   } catch (err) {
-    console.error('Error fetching featured books:', err);
-    res.render('home', { featuredBooks: [] });
+    console.error('Error fetching featured books:', err.message);
+
+    // Graceful fallback
+    res.render('home', {
+      featuredBooks: [{
+        title: "Service Unavailable",
+        author: "",
+        coverImage: "/uploads/images/default-cover.png",
+        openLibraryLink: "#"
+      }]
+    });
   }
 });
 
@@ -125,15 +130,26 @@ router.get('/search', async (req, res) => {
 
   query = query.trim();
 
+  // Initialize results
+  let localBooks = [];
+  let apiBooks = [];
+  let googleBooks = [];
+  let nytBooks = [];
+
   try {
     // 1. Local books from MongoDB
-    const localBooks = await Book.find({
+    localBooks = await Book.find({
       title: { $regex: query, $options: 'i' }
     });
+  } catch (err) {
+    console.error('MongoDB search error:', err.message);
+    localBooks = [];
+  }
 
-    // 2. Open Library API (no key needed)
+  // 2. Open Library API
+  try {
     const apiRes = await axios.get(`${process.env.OPEN_LIBRARY_BASE}/search.json?q=${encodeURIComponent(query)}&limit=10`);
-    const apiBooks = apiRes.data.docs.map(book => ({
+    apiBooks = apiRes.data.docs.map(book => ({
       title: book.title,
       author: book.author_name?.[0] || 'Unknown',
       coverImage: book.cover_i
@@ -141,49 +157,69 @@ router.get('/search', async (req, res) => {
         : '/uploads/images/default-cover.png',
       source: 'openlibrary'
     }));
+  } catch (err) {
+    console.warn('Open Library API unavailable:', err.response?.data?.errors || err.message);
+    apiBooks = [{
+      title: "Open Library temporarily unavailable",
+      author: "",
+      coverImage: "/uploads/images/default-cover.png",
+      source: "openlibrary"
+    }];
+  }
 
-    // 3. Google Books API
+  // 3. Google Books API
+  try {
     const googleRes = await axios.get(`https://www.googleapis.com/books/v1/volumes?q=${encodeURIComponent(query)}&maxResults=10&key=${process.env.GOOGLE_BOOKS_API_KEY}`);
-    const googleBooks = (googleRes.data.items || []).map(item => ({
+    googleBooks = (googleRes.data.items || []).map(item => ({
       title: item.volumeInfo.title,
       author: (item.volumeInfo.authors || ['Unknown'])[0],
       coverImage: item.volumeInfo.imageLinks?.thumbnail || '/uploads/images/default-cover.png',
       link: item.volumeInfo.infoLink,
       source: 'googlebooks'
     }));
-    // 4. NYT Books API — Flexible Title Search
-    let nytBooks = [];
-    try {
-      const nytRes = await axios.get(
-        `https://api.nytimes.com/svc/books/v3/lists/best-sellers/history.json?title=${encodeURIComponent(query)}&api-key=${process.env.NYT_BOOKS_API_KEY}`
-      );
-
-      nytBooks = (nytRes.data.results || []).map(book => ({
-        title: book.title,
-        author: book.author || 'Unknown',
-        coverImage: '/uploads/images/default-cover.png',
-        link: `https://www.nytimes.com/search?query=${encodeURIComponent(book.title)}`,
-        source: 'nytbooks'
-      }));
-    } catch (nytErr) {
-      console.warn('NYT API fallback triggered:', nytErr.response?.data?.errors || nytErr.message);
-      nytBooks = []; // You can optionally retry with another NYT endpoint here
-    }
-
-    // Render all sources together
-    res.render('searchResults', {
-      localBooks,
-      apiBooks,
-      googleBooks,
-      nytBooks,
-      searchTerm: query
-    });
-
   } catch (err) {
-    console.error('Search error:', err.response?.data || err.message || err);
-    res.status(500).send('Search failed');
+    console.warn('Google Books API unavailable:', err.response?.data?.error?.message || err.message);
+    googleBooks = [{
+      title: "Google Books temporarily unavailable",
+      author: "",
+      coverImage: "/uploads/images/default-cover.png",
+      source: "googlebooks"
+    }];
   }
+
+  // 4. NYT Books API
+  try {
+    const nytRes = await axios.get(
+      `https://api.nytimes.com/svc/books/v3/lists/best-sellers/history.json?title=${encodeURIComponent(query)}&api-key=${process.env.NYT_BOOKS_API_KEY}`
+    );
+
+    nytBooks = (nytRes.data.results || []).map(book => ({
+      title: book.title,
+      author: book.author || 'Unknown',
+      coverImage: '/uploads/images/default-cover.png',
+      link: `https://www.nytimes.com/search?query=${encodeURIComponent(book.title)}`,
+      source: 'nytbooks'
+    }));
+  } catch (nytErr) {
+    console.warn('NYT API unavailable:', nytErr.response?.data?.errors || nytErr.message);
+    nytBooks = [{
+      title: "NYT Books temporarily unavailable",
+      author: "",
+      coverImage: "/uploads/images/default-cover.png",
+      source: "nytbooks"
+    }];
+  }
+
+  // ✅ Render all results with fallback message if needed
+  res.render('searchResults', {
+    localBooks,
+    apiBooks,
+    googleBooks,
+    nytBooks,
+    searchTerm: query
+  });
 });
+
 
 router.post('/submit-query', async (req, res) => {
   const { name, email, message } = req.body;

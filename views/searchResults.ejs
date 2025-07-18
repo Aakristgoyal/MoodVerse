@@ -24,59 +24,80 @@
 
   <% if (apiBooks.length > 0) { %>
     <h3 class="mt-4">Books from Open Library</h3>
-    <div class="row">
-      <% apiBooks.forEach(book => { %>
-        <div class="col-md-3">
-          <div class="card mb-4 shadow-sm">
-            <a href="https://openlibrary.org/search?q=<%= encodeURIComponent(book.title) %>" target="_blank">
-              <img src="<%= book.coverImage %>" class="card-img-top" alt="Cover">
-              <div class="card-body">
-                <h5 class="card-title"><%= book.title %></h5>
-                <p class="card-text">by <%= book.author %></p>
-              </div>
-            </a>
+
+    <% if (apiBooks[0].title === "Open Library temporarily unavailable") { %>
+      <div class="alert alert-warning">
+        Open Library is temporarily unavailable. Showing partial results.
+      </div>
+    <% } else { %>
+      <div class="row">
+        <% apiBooks.forEach(book => { %>
+          <div class="col-md-3">
+            <div class="card mb-4 shadow-sm">
+              <a href="https://openlibrary.org/search?q=<%= encodeURIComponent(book.title) %>" target="_blank">
+                <img src="<%= book.coverImage %>" class="card-img-top" alt="Cover">
+                <div class="card-body">
+                  <h5 class="card-title"><%= book.title %></h5>
+                  <p class="card-text">by <%= book.author %></p>
+                </div>
+              </a>
+            </div>
           </div>
-        </div>
-      <% }) %>
-    </div>
+        <% }) %>
+      </div>
+    <% } %>
   <% } %>
 
   <% if (googleBooks && googleBooks.length > 0) { %>
     <h3 class="mt-4">Books from Google Books</h3>
-    <div class="row">
-      <% googleBooks.forEach(book => { %>
-        <div class="col-md-3">
-          <div class="card mb-4 shadow-sm">
-            <a href="<%= book.link %>" target="_blank">
-              <img src="<%= book.coverImage %>" class="card-img-top" alt="Cover">
-              <div class="card-body">
-                <h5 class="card-title"><%= book.title %></h5>
-                <p class="card-text">by <%= book.author %></p>
-              </div>
-            </a>
+
+    <% if (googleBooks[0].title === "Google Books temporarily unavailable") { %>
+      <div class="alert alert-warning">
+        Google Books API is temporarily unavailable. Showing partial results.
+      </div>
+    <% } else { %>
+      <div class="row">
+        <% googleBooks.forEach(book => { %>
+          <div class="col-md-3">
+            <div class="card mb-4 shadow-sm">
+              <a href="<%= book.link %>" target="_blank">
+                <img src="<%= book.coverImage %>" class="card-img-top" alt="Cover">
+                <div class="card-body">
+                  <h5 class="card-title"><%= book.title %></h5>
+                  <p class="card-text">by <%= book.author %></p>
+                </div>
+              </a>
+            </div>
           </div>
-        </div>
-      <% }) %>
-    </div>
+        <% }) %>
+      </div>
+    <% } %>
   <% } %>
 
   <% if (nytBooks && nytBooks.length > 0) { %>
     <h3 class="mt-4">Books from New York Times</h3>
-    <div class="row">
-      <% nytBooks.forEach(book => { %>
-        <div class="col-md-3">
-          <div class="card mb-4 shadow-sm">
-            <a href="<%= book.link %>" target="_blank">
-              <img src="<%= book.coverImage %>" class="card-img-top" alt="Cover">
-              <div class="card-body">
-                <h5 class="card-title"><%= book.title %></h5>
-                <p class="card-text">by <%= book.author %></p>
-              </div>
-            </a>
+
+    <% if (nytBooks[0].title === "NYT Books temporarily unavailable") { %>
+      <div class="alert alert-warning">
+        NYT Books API is temporarily unavailable. Showing partial results.
+      </div>
+    <% } else { %>
+      <div class="row">
+        <% nytBooks.forEach(book => { %>
+          <div class="col-md-3">
+            <div class="card mb-4 shadow-sm">
+              <a href="<%= book.link %>" target="_blank">
+                <img src="<%= book.coverImage %>" class="card-img-top" alt="Cover">
+                <div class="card-body">
+                  <h5 class="card-title"><%= book.title %></h5>
+                  <p class="card-text">by <%= book.author %></p>
+                </div>
+              </a>
+            </div>
           </div>
-        </div>
-      <% }) %>
-    </div>
+        <% }) %>
+      </div>
+    <% } %>
   <% } %>
 
   <% if (
