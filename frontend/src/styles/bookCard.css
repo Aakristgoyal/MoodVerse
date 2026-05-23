@@ -1,0 +1,51 @@
+.book-card {
+    min-width: 260px;
+    max-width: 260px;
+    flex-shrink: 0;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: 0.3s ease;
+    cursor: pointer;
+}
+
+.book-card:hover {
+    transform: translateY(-8px);
+    box-shadow:0 15px 35px rgba(139, 92, 246, 0.15);
+}
+
+.book-cover {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+}
+
+.book-info {
+    padding: 1.25rem;
+}
+
+.book-category {
+    color: #8b5cf6;
+    font-size: 0.85rem;
+}
+
+.book-info h3 {
+    margin: 0.8rem 0;
+    color: white;
+}
+
+.book-info p {
+    color: #94a3b8;
+    margin-bottom: 1rem;
+}
+
+.book-info button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 12px;
+    background:linear-gradient(135deg,#8b5cf6,#ec4899);
+    color: white;
+    cursor: pointer;
+}

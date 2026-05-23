@@ -1,0 +1,160 @@
+/* ==========================
+   NAVBAR
+========================== */
+
+.navbar {
+  position: sticky;
+  top: 0;
+
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 18px 8%;
+  box-sizing: border-box;
+  background: linear-gradient(
+    90deg,
+    #0b1120 0%,
+    #111827 50%,
+    #0b1120 100%
+  );
+
+  backdrop-filter: blur(20px);
+
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+
+  z-index: 1000;
+}
+
+/* ==========================
+   LOGO
+========================== */
+.navbar-logo{
+    display:flex;
+    align-items:center;
+
+}
+
+.navbar-logo img {
+    height: 60px;
+    width: auto;
+    display:block;
+    transition: transform 0.3s ease;
+}
+
+.navbar-logo img:hover {
+  transform: scale(1.05);
+}
+
+/* ==========================
+   CENTER LINKS
+========================== */
+
+.navbar-center {
+  display: flex;
+  gap: 2.5rem;
+}
+
+.navbar-center a {
+  color: #cbd5e1;
+
+  text-decoration: none;
+
+  font-weight: 500;
+
+  transition: all 0.3s ease;
+}
+
+.navbar-center a:hover {
+  color: #8b5cf6;
+}
+
+/* ==========================
+   RIGHT SIDE
+========================== */
+
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Upload Button */
+
+.upload-btn {
+  padding: 10px 18px;
+
+  border-radius: 12px;
+
+  text-decoration: none;
+
+  color: white;
+
+  font-weight: 600;
+
+  background:
+    linear-gradient(
+      135deg,
+      #8b5cf6,
+      #ec4899
+    );
+
+  transition: all 0.3s ease;
+}
+
+.upload-btn:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 20px
+    rgba(139,92,246,0.35);
+}
+
+/* Login */
+
+.login-btn {
+  color: white;
+
+  text-decoration: none;
+
+  padding: 10px 16px;
+
+  border-radius: 10px;
+
+  border: 1px solid
+    rgba(255,255,255,0.15);
+
+  transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+  background:
+    rgba(255,255,255,0.08);
+}
+
+/* Signup */
+
+.signup-btn {
+  text-decoration: none;
+
+  color: white;
+
+  padding: 10px 18px;
+
+  border-radius: 10px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6,
+      #8b5cf6
+    );
+
+  transition: all 0.3s ease;
+}
+
+.signup-btn:hover {
+  transform: translateY(-2px);
+}
