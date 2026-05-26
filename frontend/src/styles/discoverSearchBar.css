@@ -1,0 +1,119 @@
+.search-section {
+    padding: 0 8% 60px;
+}
+
+.search-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem;
+    border-radius: 24px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    backdrop-filter: blur(12px);
+}
+
+.search-input {
+    width: 100%;
+    padding: 16px 20px;
+    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.05);
+    color: white;
+    font-size: 1rem;
+    outline: none;
+    margin-bottom: 1rem;
+}
+
+.search-input::placeholder {
+    color: #94a3b8;
+}
+
+.filters-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.filters-row select {
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: #1e293b;
+    color: white;
+    outline: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+}
+
+.filters-row select option {
+    background: #1e293b;
+    color: white;
+}
+
+.discover-search-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(
+        135deg,
+        #8b5cf6,
+        #ec4899
+    );
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.discover-search-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 25px rgba(139,92,246,0.25);
+}
+
+.discover-search-btn:active {
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+
+    .search-section {
+        padding: 0 6% 50px;
+    }
+
+    .search-container {
+        padding: 1.75rem;
+    }
+
+    .filters-row {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .search-section {
+        padding: 0 5% 40px;
+    }
+
+    .search-container {
+        padding: 1.5rem;
+        border-radius: 20px;
+    }
+
+    .search-input {
+        padding: 14px 16px;
+    }
+
+    .filters-row select {
+        padding: 14px;
+    }
+
+    .discover-search-btn {
+        padding: 14px;
+    }
+
+}

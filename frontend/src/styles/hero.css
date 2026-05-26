@@ -111,3 +111,98 @@
     color: #94a3b8;
     font-size: 0.85rem;
 }
+
+@media (max-width: 1024px) {
+
+  .hero {
+    gap: 2rem;
+    padding: 0 6%;
+  }
+
+  .hero-left h1 {
+    font-size: 3.2rem;
+  }
+
+  .recommendation-card {
+    width: 320px;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .hero {
+    flex-direction: column;
+    text-align: center;
+
+    min-height: auto;
+
+    padding: 4rem 6%;
+
+    gap: 3rem;
+  }
+
+  .hero-left {
+    width: 100%;
+  }
+
+  .hero-left h1 {
+    font-size: 2.6rem;
+  }
+
+  .hero-left p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .hero-buttons {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .hero-right {
+    width: 100%;
+  }
+
+  .recommendation-card {
+    width: 100%;
+    max-width: 420px;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .hero {
+    padding: 3rem 5%;
+  }
+
+  .hero-tag {
+    font-size: 0.85rem;
+  }
+
+  .hero-left h1 {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  .hero-left p {
+    font-size: 1rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .primary-btn,
+  .secondary-btn {
+    width: 100%;
+  }
+
+  .recommendation-card {
+    padding: 1.5rem;
+  }
+
+}
+

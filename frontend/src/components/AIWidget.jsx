@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "../styles/aiWidget.css";
 
 export default function AIWidget() {
@@ -7,57 +8,46 @@ export default function AIWidget() {
       <div className="ai-container">
 
         <span className="ai-tag">
-          🤖 AI Recommendation Assistant
+          🤖 AI-Powered Book Discovery
         </span>
 
         <h2>
-          Ask MoodVerse AI
+          Let MoodVerse AI Find Your Next Great Read
         </h2>
 
         <p>
-          Describe your mood, favorite genre,
-          or the kind of story you're looking for.
-          Our AI will help you discover the perfect book.
+          Whether you're looking for motivation,
+          adventure, romance, or comfort, MoodVerse AI
+          analyzes your preferences and reading goals
+          to recommend books tailored specifically to you.
         </p>
 
-        <div className="ai-search-box">
+        <div className="ai-features">
 
-          <input
-            type="text"
-            placeholder="I need a motivational book for exam stress..."
-          />
+          <div className="ai-feature-card">
+            🎭 Mood-Based Recommendations
+          </div>
 
-          <button>
-            Get Recommendations
-          </button>
+          <div className="ai-feature-card">
+            📚 Personalized Reading Suggestions
+          </div>
 
-        </div>
+          <div className="ai-feature-card">
+            🔍 Discover Hidden Gems
+          </div>
 
-        <div className="prompt-container">
-
-          <h4>Popular Prompts</h4>
-
-          <div className="prompt-grid">
-
-            <div className="prompt-card">
-              📚 Recommend a fantasy adventure
-            </div>
-
-            <div className="prompt-card">
-              🔍 I want a mystery with plot twists
-            </div>
-
-            <div className="prompt-card">
-              🚀 Suggest books for productivity
-            </div>
-
-            <div className="prompt-card">
-              ⚡ Something like Harry Potter
-            </div>
-
+          <div className="ai-feature-card">
+            ⚡ Instant AI Assistance
           </div>
 
         </div>
+
+        <Link
+          to="/ai-assistant"
+          className="ai-button"
+        >
+          Open AI Assistant
+        </Link>
 
       </div>
 

@@ -39,6 +39,7 @@
     border:1px solid rgba(255, 255, 255, 0.08);
     border-radius: 24px;
     padding: 2rem;
+    overflow: hidden;
     backdrop-filter: blur(10px);
     transition: all 0.3s ease;
 }
@@ -63,9 +64,75 @@
 .author h4 {
     margin-bottom: 0.3rem;
     color: white;
+    font-size: 1rem;
 }
 
 .author span {
     color: #94a3b8;
     font-size: 0.9rem;
+}
+
+@media (max-width: 1024px) {
+
+  .testimonials-section {
+    padding: 100px 6%;
+  }
+
+  .testimonials-header h2 {
+    font-size: 2.6rem;
+  }
+
+  .testimonial-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .testimonials-section {
+    padding: 80px 6%;
+  }
+
+  .testimonials-header {
+    margin-bottom: 3rem;
+  }
+
+  .testimonials-header h2 {
+    font-size: 2.2rem;
+  }
+
+  .testimonials-header p {
+    font-size: 1rem;
+  }
+
+  .testimonial-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .testimonials-section {
+    padding: 70px 5%;
+  }
+
+  .section-tag {
+    font-size: 0.85rem;
+  }
+
+  .testimonials-header h2 {
+    font-size: 1.8rem;
+  }
+
+  .testimonial-card {
+    padding: 1.5rem;
+  }
+
+  .review {
+    font-size: 0.95rem;
+  }
+
 }

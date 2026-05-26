@@ -1,0 +1,156 @@
+.favorites-section {
+    padding: 80px 8%;
+}
+
+.favorites-header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto 2rem;
+}
+
+.favorites-tag {
+    display: inline-block;
+    padding: 10px 18px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+}
+
+.favorites-header h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+.favorites-header p {
+    color: #94a3b8;
+    line-height: 1.7;
+}
+
+/* Horizontal Scroll */
+
+.favorites-grid {
+    display: flex;
+    gap: 1rem;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    padding-bottom: 10px;
+
+    scrollbar-width: thin;
+}
+
+.favorites-grid::-webkit-scrollbar {
+    height: 6px;
+}
+
+.favorites-grid::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.15);
+    border-radius: 999px;
+}
+
+/* Card */
+
+.favorite-card {
+    flex: 0 0 320px;
+
+    display: flex;
+    gap: 1rem;
+
+    padding: 1.25rem;
+
+    border-radius: 20px;
+
+    background: rgba(255,255,255,0.04);
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    backdrop-filter: blur(12px);
+}
+
+.favorite-cover {
+    width: 70px;
+    height: 100px;
+
+    flex-shrink: 0;
+
+    border-radius: 12px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 2rem;
+
+    background: linear-gradient(
+        135deg,
+        rgba(139,92,246,.25),
+        rgba(236,72,153,.20)
+    );
+}
+
+.favorite-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.favorite-content h3 {
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+}
+
+.author {
+    display: block;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+}
+
+.favorite-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.75rem;
+}
+
+.favorite-meta span {
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+.favorite-content p {
+    color: #94a3b8;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    margin-bottom: 0.75rem;
+}
+
+.favorite-content button {
+    border: none;
+    background: transparent;
+    color: #8b5cf6;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Mobile */
+
+@media (max-width: 768px) {
+
+    .favorites-section {
+        padding: 60px 5%;
+    }
+
+    .favorites-header h2 {
+        font-size: 2rem;
+    }
+
+    .favorite-card {
+        flex: 0 0 280px;
+    }
+}

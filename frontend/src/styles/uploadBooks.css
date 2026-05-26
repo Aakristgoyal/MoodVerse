@@ -45,8 +45,14 @@
 .feature-item {
     padding: 1rem;
     border-radius: 16px;
+    transition: all 0.3s ease;
     background:rgba(255, 255, 255, 0.05);
     color: white;
+}
+
+.feature-item:hover {
+    transform: translateY(-3px);
+    background: rgba(255,255,255,0.08);
 }
 
 .upload-btn {
@@ -65,4 +71,75 @@
     transform: translateY(-3px);
     box-shadow:
         0 12px 25px rgba(139, 92, 246, 0.25);
+}
+
+@media (max-width: 1024px) {
+
+  .upload-section {
+    padding: 100px 6%;
+  }
+
+  .upload-container {
+    padding: 4rem 2rem;
+  }
+
+  .upload-content h2 {
+    font-size: 2.6rem;
+  }
+
+}
+
+@media (max-width: 768px) {
+
+  .upload-section {
+    padding: 80px 6%;
+  }
+
+  .upload-container {
+    padding: 3rem 1.5rem;
+  }
+
+  .upload-content h2 {
+    font-size: 2.2rem;
+  }
+
+  .upload-content p {
+    font-size: 1rem;
+  }
+
+  .upload-features {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+}
+
+@media (max-width: 480px) {
+
+  .upload-section {
+    padding: 70px 5%;
+  }
+
+  .upload-container {
+    padding: 2rem 1rem;
+    border-radius: 24px;
+  }
+
+  .upload-tag {
+    font-size: 0.85rem;
+  }
+
+  .upload-content h2 {
+    font-size: 1.8rem;
+  }
+
+  .upload-content p {
+    font-size: 0.95rem;
+  }
+
+  .upload-btn {
+    width: 100%;
+    padding: 14px;
+  }
+
 }
