@@ -352,7 +352,8 @@ VITE_API_URL=
 - Reading Dashboard
 - Upload Books
 
-*(Add screenshots here once available.)*
+<img width="1631" height="892" alt="image" src="https://github.com/user-attachments/assets/0f81f71d-4ca6-4bdb-b9c1-da0c2780a917" />
+
 
 ---
 
@@ -377,7 +378,7 @@ GitHub:
 https://github.com/Aakristgoyal
 
 LinkedIn:
-(Add your LinkedIn profile)
+www.linkedin.com/in/aakristgoyal
 
 ---
 
