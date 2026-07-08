@@ -352,17 +352,18 @@ VITE_API_URL=
   
 <img width="1293" height="868" alt="image" src="https://github.com/user-attachments/assets/106b7fb9-7c6b-46b9-ba31-c842f3435410" />
 
-- AI Assistant
+- Personalized Recommendations
   
 <img width="1457" height="887" alt="image" src="https://github.com/user-attachments/assets/cb6acd41-083c-42ed-b25b-1483f1a2a83e" />
 
-- Personalized Recommendations
+- AI Assistant
   
 <img width="1452" height="855" alt="image" src="https://github.com/user-attachments/assets/574eca5d-e63f-42e4-bccc-5081ea18b18f" />
 
 - Library
   
 <img width="1428" height="881" alt="image" src="https://github.com/user-attachments/assets/f8577279-7098-4e0f-b6c5-d2dcebfa4bfe" />
+
 
 - Upload Books
   
