@@ -345,18 +345,27 @@ VITE_API_URL=
 # 📸 Screenshots
 
 - Home Page
-- Discover Page
-- AI Assistant
-- Personalized Recommendations
-- Library
-- Reading Dashboard
-- Upload Books
 
 <img width="1631" height="892" alt="image" src="https://github.com/user-attachments/assets/0f81f71d-4ca6-4bdb-b9c1-da0c2780a917" />
+
+- Discover Page
+  
 <img width="1293" height="868" alt="image" src="https://github.com/user-attachments/assets/106b7fb9-7c6b-46b9-ba31-c842f3435410" />
+
+- AI Assistant
+  
 <img width="1457" height="887" alt="image" src="https://github.com/user-attachments/assets/cb6acd41-083c-42ed-b25b-1483f1a2a83e" />
+
+- Personalized Recommendations
+  
 <img width="1452" height="855" alt="image" src="https://github.com/user-attachments/assets/574eca5d-e63f-42e4-bccc-5081ea18b18f" />
+
+- Library
+  
 <img width="1428" height="881" alt="image" src="https://github.com/user-attachments/assets/f8577279-7098-4e0f-b6c5-d2dcebfa4bfe" />
+
+- Upload Books
+  
 <img width="1320" height="897" alt="image" src="https://github.com/user-attachments/assets/25d73ef8-407a-4205-b788-3591f7d514a3" />
 
 ---
