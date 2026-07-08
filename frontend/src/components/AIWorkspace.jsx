@@ -9,6 +9,7 @@ import {
 } from "react-icons/fi";
 import BookCard from "./BookCard";
 import "../styles/aiWorkspace.css";
+import API_URL from "../config/api";
 
 export default function AIWorkspace() {
 
@@ -17,10 +18,6 @@ export default function AIWorkspace() {
     const [activeChat, setActiveChat] = useState(null);
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
-
-    const API_URL =
-        import.meta.env.VITE_API_URL ||
-        "http://localhost:3000";
 
     useEffect(() => {
         fetchConversations();

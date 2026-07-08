@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import API_URL from "../../config/api";
 
 import UploadedBooks from "./UploadedBooks";
 import SavedBooks from "./SavedBooks";
@@ -23,7 +24,7 @@ export default function LibraryTabs({
     const fetchBooks =
       async () => {
         try {
-          const res = await axios.get( "http://localhost:3000/api/my-books",
+          const res = await axios.get( `${API_URL}/api/my-books`,
               {
                 withCredentials: true
               }

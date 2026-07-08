@@ -4,13 +4,9 @@ import {
   FiChevronLeft,
   FiChevronRight
 } from "react-icons/fi";
-
+import API_URL from "../config/api";
 import BookCard from "./BookCard";
 import "../styles/discoverResults.css";
-
-const API_URL =
-  import.meta.env.VITE_API_URL ||
-  "http://localhost:3000";
 
 export default function DiscoverResults({
   selectedMood,

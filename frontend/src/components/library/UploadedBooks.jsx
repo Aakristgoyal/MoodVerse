@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import axios from "axios";
 import {Eye,Pencil,Trash2} from "lucide-react";
-
+import API_URL from "../../config/api";
 const MOOD_STYLES = {
   calm: { bg: "rgba(8,80,65,0.4)", color: "#9FE1CB" },
   inspired: { bg: "rgba(60,52,137,0.4)", color: "#CECBF6" },
@@ -27,7 +27,7 @@ export default function UploadedBooks({
     try {
 
       await axios.delete(
-        `http://localhost:3000/api/books/${id}`,
+        `${API_URL}/api/books/${id}`,
         {
           withCredentials: true
         }

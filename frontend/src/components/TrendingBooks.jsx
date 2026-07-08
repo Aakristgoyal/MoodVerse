@@ -2,6 +2,7 @@ import { useRef, useEffect, useState } from "react";
 import axios from "axios";
 import BookCard from "./BookCard";
 import "../styles/trendingBooks.css";
+import API_URL from "../config/api";
 
 export default function TrendingBooks() {
 
@@ -15,7 +16,7 @@ export default function TrendingBooks() {
         try {
           const res =
             await axios.get(
-              "http://localhost:3000/api/search?query=bestseller"
+              `${API_URL}/api/search?query=bestseller`
             );
           const combinedBooks = [
             ...(res.data.openLibraryBooks || []),
@@ -38,7 +39,7 @@ export default function TrendingBooks() {
       try {
         const res =
           await axios.get(
-            "http://localhost:3000/api/saved-books",
+            `${API_URL}/api/saved-books`,
             {
               withCredentials: true
             }
@@ -75,7 +76,7 @@ export default function TrendingBooks() {
     try {
       console.log("Saving book:", book);
       const res = await axios.post(
-        "http://localhost:3000/api/saved-books",
+        `${API_URL}/api/saved-books`,
         book,
         {
           withCredentials: true
@@ -91,7 +92,7 @@ export default function TrendingBooks() {
     try {
       console.log("Unsaving book:", bookId);
       const res = await axios.delete(
-        `http://localhost:3000/api/saved-books/${bookId}`,
+        `${API_URL}/api/saved-books/${bookId}`,
         {
           withCredentials: true
         }

@@ -5,6 +5,7 @@ import { HiMenu, HiX } from "react-icons/hi";
 import logo from "../assets/logo.jpeg";
 import "../styles/navbar.css";
 import { UserCircle } from "lucide-react";
+import API_URL from "../config/api";
 
 export default function Navbar() {
   const [user, setUser] = useState(null);
@@ -13,7 +14,7 @@ export default function Navbar() {
     const fetchUser = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:3000/api/auth/me",
+          `${API_URL}/api/auth/me`,
           {
             withCredentials: true
           }
@@ -31,7 +32,7 @@ export default function Navbar() {
   const handleLogout = async () => {
     try {
       await axios.post(
-        "http://localhost:3000/api/auth/logout",
+        `${API_URL}/api/auth/logout`,
         {},
         {
           withCredentials: true

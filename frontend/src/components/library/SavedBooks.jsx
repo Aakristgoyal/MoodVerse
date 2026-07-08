@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import BookCard from "../BookCard";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+import API_URL from "../../config/api";
 
 export default function SavedBooks() {
 

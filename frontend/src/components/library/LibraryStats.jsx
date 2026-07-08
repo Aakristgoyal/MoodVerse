@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API_URL from "../../config/api";
 
 export default function LibraryStats() {
 
@@ -43,15 +44,15 @@ export default function LibraryStats() {
         const [booksRes, savedRes, readingRes] =
           await Promise.all([
             axios.get(
-              "http://localhost:3000/api/my-books",
+              `${API_URL}/api/my-books`,
               { withCredentials: true }
             ),
             axios.get(
-              "http://localhost:3000/api/saved-books",
+              `${API_URL}/api/saved-books`,
               { withCredentials: true }
             ),
             axios.get(
-              "http://localhost:3000/api/continue-reading",
+              `${API_URL}/api/continue-reading`,
               { withCredentials: true }
             )
           ]);

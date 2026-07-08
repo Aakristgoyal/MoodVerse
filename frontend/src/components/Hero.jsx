@@ -2,6 +2,7 @@ import "../styles/hero.css";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import API_URL from "../config/api";
 
 export default function Hero() {
 
@@ -45,7 +46,7 @@ export default function Hero() {
         const fetchSuggestions = async () => {
             try {
                 const res = await axios.get(
-                    `http://localhost:3000/api/search?query=${randomMood}`
+                    `${API_URL}/api/search?query=${randomMood}`
                 );
                 const books = [
                     ...(res.data.openLibraryBooks || []),
