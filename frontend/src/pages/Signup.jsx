@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/auth.css";
 import logo from "../assets/logo.jpeg";
+import API_URL from "../config/api";
 
 export default function Signup() {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ export default function Signup() {
     }
     try {
       const res = await axios.post(
-        "http://localhost:3000/api/auth/signup",
+        `${API_URL}/api/auth/signup`,
         formData,
         {
           withCredentials: true
