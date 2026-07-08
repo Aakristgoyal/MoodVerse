@@ -28,15 +28,33 @@ mongoose.connect(process.env.MONGO_URI)
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(
+    "/uploads",
+    express.static(
+        path.join(__dirname,"uploads")
+    )
+);
+const allowedOrigins = [
+  "http://localhost:5173",
+  process.env.FRONTEND_URL
+];
+
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: function (origin, callback) {
+
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true
 }));
 
 // ✅ Session Configuration (single and correct one)
+app.set("trust proxy",1);
 app.use(session({
-  secret: 'moodverse-secret-key-2024',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false, // better security practice
   store: MongoStore.create({
@@ -44,7 +62,13 @@ app.use(session({
     ttl: 14 * 24 * 60 * 60 // sessions expire in 14 days
   }),
   cookie: {
-    maxAge: 14 * 24 * 60 * 60 * 1000 // 14 days in ms
+    maxAge: 14 * 24 * 60 * 60 * 1000,
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite:
+      process.env.NODE_ENV === "production"
+        ? "none"
+        : "lax"
   }
 }));
 
@@ -73,7 +97,7 @@ app.use(bookRoutes);
 app.use('/chatbot', chatbotRoutes);
 app.use(progressRoutes);
 app.use(savedBookRoutes);
-app.use("/api/conversations",conversationRoutes);
+app.use("/api/conversations", conversationRoutes);
 app.use("/api/personalized", personalizedRoutes);
 // Test Route
 app.get('/test', (req, res) => {
@@ -82,5 +106,7 @@ app.get('/test', (req, res) => {
 
 // Start Server
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+  console.log(
+    `🚀 MoodVerse Backend running on port ${port}`
+  );
 });
