@@ -1,0 +1,159 @@
+.profile-page {
+
+    min-height: 100vh;
+
+    padding: 120px 8% 60px;
+
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.profile-card {
+
+    width: 100%;
+    max-width: 700px;
+
+    padding: 2rem;
+
+    border-radius: 24px;
+
+    background:
+        rgba(255, 255, 255, 0.04);
+
+    border:
+        1px solid rgba(255, 255, 255, 0.08);
+
+    backdrop-filter: blur(20px);
+}
+
+.profile-header {
+
+    display: flex;
+    align-items: center;
+
+    gap: 1.5rem;
+
+    margin-bottom: 2rem;
+}
+
+.avatar {
+
+    width: 80px;
+    height: 80px;
+
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 2rem;
+    font-weight: 700;
+
+    color: white;
+
+    background:
+        linear-gradient(135deg,
+            #8b5cf6,
+            #ec4899);
+}
+
+.profile-header h1 {
+
+    margin-bottom: 6px;
+}
+
+.profile-header p {
+
+    color: #94a3b8;
+}
+
+.profile-links {
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 1rem;
+
+    margin-bottom: 2rem;
+}
+
+.profile-links a {
+
+    text-decoration: none;
+
+    color: white;
+
+    padding: 1rem;
+    border-radius: 14px;
+    background:
+        rgba(255, 255, 255, 0.04);
+    transition: .3s ease;
+}
+
+.profile-links a:hover {
+    background:
+        rgba(255, 255, 255, 0.08);
+    transform: translateY(-2px);
+}
+
+.profile-action-btn,
+.logout-btn-profile {
+    width: 100%;
+    padding: 14px;
+    border: none;
+    border-radius: 12px;
+    color: white;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background:
+        linear-gradient(135deg,
+            #8b5cf6,
+            #ec4899);
+    transition: .3s ease;
+}
+
+.profile-action-btn:hover,
+.logout-btn-profile:hover {
+    transform: translateY(-2px);
+}
+
+@media (max-width:768px) {
+    .profile-page {
+        padding:
+            100px 6% 50px;
+    }
+
+    .profile-card {
+        padding: 1.5rem;
+    }
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .avatar {
+        width: 70px;
+        height: 70px;
+    }
+}
+
+@media (max-width:480px) {
+    .profile-page {
+        padding:
+            90px 5% 40px;
+    }
+
+    .profile-card {
+        padding: 1.25rem;
+    }
+
+    .profile-links a {
+        padding: .9rem;
+    }
+
+}

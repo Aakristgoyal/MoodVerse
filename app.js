@@ -3,11 +3,19 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const path = require('path');
+const cors = require("cors");
 const session = require('express-session');
 const methodOverride = require('method-override');
 const flash = require('connect-flash');
+const authRoutes = require('./routes/authRoutes');
+const searchRoutes = require("./routes/searchRoutes");
+const queryRoutes = require("./routes/queryRoutes");
 const bookRoutes = require('./routes/bookRoutes');
-const chatbotRoutes = require('./routes/chatbot');
+const chatbotRoutes = require('./routes/chatbotRoutes');
+const progressRoutes = require("./routes/progressRoutes");
+const savedBookRoutes = require("./routes/savedBookRoutes");
+const conversationRoutes = require("./routes/conversationRoutes");
+const personalizedRoutes = require("./routes/personalizedRoutes");
 const MongoStore = require('connect-mongo');
 const port = process.env.PORT || 3000;
 
@@ -21,6 +29,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true
+}));
 
 // ✅ Session Configuration (single and correct one)
 app.use(session({
@@ -54,9 +66,15 @@ app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
 // Routes
+app.use(searchRoutes);
+app.use(queryRoutes);
+app.use("/api/auth", authRoutes);
 app.use(bookRoutes);
 app.use('/chatbot', chatbotRoutes);
-
+app.use(progressRoutes);
+app.use(savedBookRoutes);
+app.use("/api/conversations",conversationRoutes);
+app.use("/api/personalized", personalizedRoutes);
 // Test Route
 app.get('/test', (req, res) => {
   res.send('Express server is working');

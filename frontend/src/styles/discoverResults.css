@@ -1,55 +1,243 @@
+/* ==========================================
+   DISCOVER RESULTS SECTION
+========================================== */
+
 .results-section {
-    padding: 0 8% 100px;
+
+    width: 100%;
+
+    max-width: 1400px;
+
+    margin: 4rem auto;
+
+    padding: 0 4%;
+
 }
+
+/* ==========================================
+   HEADER
+========================================== */
 
 .results-header {
-    max-width: 1200px;
-    margin: 0 auto 2rem;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 1.5rem;
+
 }
 
-.results-header h3 {
-    color: white;
-    font-size: 1.3rem;
-    font-weight: 600;
+.results-header h2 {
+
+    font-size: 1.65rem;
+
+    font-weight: 700;
+
+    color: #ffffff;
+
+    margin: 0;
+
 }
+
+/* ==========================================
+   SCROLL CONTROLS
+========================================== */
+
+.results-controls {
+
+    display: flex;
+
+    gap: .75rem;
+
+}
+
+.results-controls button {
+
+    width: 42px;
+
+    height: 42px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: rgba(255,255,255,.06);
+
+    color: white;
+
+    font-size: 1.1rem;
+
+    transition: .25s ease;
+
+}
+
+.results-controls button:hover {
+
+    background: linear-gradient(
+
+        135deg,
+
+        #8b5cf6,
+
+        #ec4899
+
+    );
+
+    transform: scale(1.08);
+
+}
+
+/* ==========================================
+   BOOK SCROLLER
+========================================== */
 
 .results-grid {
-    max-width: 1200px;
-    margin: 0 auto;
 
-    display: grid;
+    display: flex;
 
-    grid-template-columns:
-        repeat(auto-fill,minmax(250px,1fr));
+    gap: 1.5rem;
 
-    gap: 2rem;
-}
+    overflow-x: auto;
 
-.results-grid .book-card {
-    min-width: unset;
-    max-width: unset;
-}
+    overflow-y: hidden;
 
-@media (max-width: 768px) {
+    scroll-behavior: smooth;
 
-    .results-section {
-        padding: 0 6% 80px;
-    }
+    padding-bottom: .5rem;
 
-    .results-grid {
-        gap: 1.5rem;
-    }
+    scrollbar-width: none;
 
 }
 
-@media (max-width: 480px) {
+.results-grid::-webkit-scrollbar {
 
-    .results-section {
-        padding: 0 5% 70px;
+    display: none;
+
+}
+
+/* Prevent cards from shrinking */
+
+.results-grid > * {
+
+    flex: 0 0 auto;
+
+}
+
+/* ==========================================
+   LOADING / EMPTY STATE
+========================================== */
+
+.results-loading {
+
+    min-height: 260px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    text-align: center;
+
+}
+
+.results-loading h2 {
+
+    color: #94a3b8;
+
+    font-size: 1.2rem;
+
+    font-weight: 500;
+
+}
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (max-width:992px){
+
+    .results-header h2{
+
+        font-size:1.45rem;
+
     }
 
-    .results-grid {
-        grid-template-columns: 1fr;
+}
+
+@media (max-width:768px){
+
+    .results-section{
+
+        margin:3rem auto;
+
+        padding:0 5%;
+
+    }
+
+    .results-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+        gap:1rem;
+
+    }
+
+    .results-controls{
+
+        align-self:flex-end;
+
+    }
+
+    .results-grid{
+
+        gap:1rem;
+
+    }
+
+}
+
+@media (max-width:480px){
+
+    .results-section{
+
+        margin:2.5rem auto;
+
+        padding:0 4%;
+
+    }
+
+    .results-header h2{
+
+        font-size:1.25rem;
+
+    }
+
+    .results-controls button{
+
+        width:38px;
+
+        height:38px;
+
+    }
+
+    .results-grid{
+
+        gap:.8rem;
+
     }
 
 }

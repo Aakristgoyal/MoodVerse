@@ -18,8 +18,7 @@
     flex-direction: column;
     padding: 1rem;
     background: #081124;
-    border-right:
-        1px solid rgba(255,255,255,0.08);
+    border-right: 1px solid rgba(255,255,255,0.08);
     transition: left 0.3s ease;
     z-index: 3000;
     overflow: hidden;
@@ -63,8 +62,7 @@
     border-radius: 12px;
     cursor: pointer;
     color: white;
-    background:
-        linear-gradient(
+    background: linear-gradient(
             135deg,
             #8b5cf6,
             #ec4899
@@ -100,8 +98,7 @@
 }
 
 .recent-chats button:hover {
-    background:
-        rgba(255,255,255,0.06);
+    background: rgba(255,255,255,0.06);
 }
 
 .recent-chats::-webkit-scrollbar {
@@ -109,8 +106,7 @@
 }
 
 .recent-chats::-webkit-scrollbar-thumb {
-    background:
-        rgba(139,92,246,0.4);
+    background: rgba(139,92,246,0.4);
     border-radius: 999px;
 }
 /* =========================
@@ -119,8 +115,7 @@
 .sidebar-profile {
     margin-top: auto;
     padding-top: 1rem;
-    border-top:
-        1px solid rgba(255,255,255,0.08);
+    border-top: 1px solid rgba(255,255,255,0.08);
 }
 
 .profile-btn {
@@ -133,8 +128,7 @@
     border-radius: 12px;
     cursor: pointer;
     color: white;
-    background:
-        rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.05);
 }
 
 .profile-left {
@@ -150,8 +144,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background:
-        rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.08);
 }
 
 
@@ -169,24 +162,45 @@
     font-size: 0.9rem;
 }
 
+
 .chat-area {
     display: flex;
     flex-direction: column;
-
     min-height: 75vh;
 }
 
 .chat-window {
     flex: 1;
-
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    justify-content: flex-start;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 2rem;
+}
 
-    text-align: center;
+.user-message {
+    align-self: flex-end;
+    max-width: 75%;
+    padding: 14px 18px;
+    border-radius: 18px;
+    color: white;
+    background: linear-gradient(
+            135deg,
+            #8b5cf6,
+            #ec4899
+        );
+}
 
-    padding: 1rem;
+.bot-message {
+    align-self: flex-start;
+    max-width: 80%;
+    padding: 14px 18px;
+    border-radius: 18px;
+    color: white;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.08);
 }
 
 .welcome-message h2 {
@@ -200,27 +214,19 @@
 
 .mood-chips {
     margin-top: 1.5rem;
-
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-
     gap: 0.75rem;
 }
 
 .mood-chips button {
     padding: 10px 16px;
-
     border: none;
     border-radius: 999px;
-
     cursor: pointer;
-
     color: white;
-
-    background:
-        rgba(255,255,255,0.06);
-
+    background: rgba(255,255,255,0.06);
     transition: 0.2s ease;
 }
 
@@ -237,28 +243,18 @@
     display: flex;
     align-items: center;
     gap: 0.8rem;
-
     padding: 1rem;
-
     border-radius: 18px;
-
-    background:
-        rgba(255,255,255,0.04);
-
-    border:
-        1px solid rgba(255,255,255,0.08);
+    background:  rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
 }
 
 .chat-input-container input {
     flex: 1;
-
     border: none;
     outline: none;
-
     background: transparent;
-
     color: white;
-
     font-size: 1rem;
 }
 
@@ -269,18 +265,13 @@
 .send-btn {
     width: 44px;
     height: 44px;
-
     border: none;
     border-radius: 12px;
-
     cursor: pointer;
-
     color: white;
-
     display: flex;
     align-items: center;
     justify-content: center;
-
     background:
         linear-gradient(
             135deg,
@@ -289,6 +280,25 @@
         );
 }
 
+.chat-books-row {
+    display: flex;
+    gap: 1rem;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    width: 100%;
+    padding: 1rem 0;
+}
+
+.chat-books-row::-webkit-scrollbar {
+    height: 6px;
+}
+
+.chat-books-row::-webkit-scrollbar-thumb {
+    background: rgba(139,92,246,0.4);
+    border-radius: 999px;
+}
 /* =========================
    MOBILE
 ========================= */

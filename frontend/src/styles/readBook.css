@@ -1,0 +1,137 @@
+.reader-page {
+    /* Changed: width is now dynamic based on content (PDF size) */
+    width: max-content;
+    max-width: 100%;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    min-height: 100vh;
+    box-sizing: border-box; /* Ensures padding doesn't push width over 100% */
+    
+    /* Changed: updated background to match body color (#0b1120) */
+    background: #0b1120;
+    
+    /* Optional: ensures the page is centered if the screen is wider than the PDF */
+    margin: 0 auto;
+}
+
+.reader-page h1 {
+    color: white;
+    margin-bottom: 1.5rem;
+}
+
+.react-pdf__Document {
+    display: flex;
+    justify-content: center;
+}
+
+.react-pdf__Page {
+    margin: 0 auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.reader-controls {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1rem;
+    color: white;
+}
+
+.reader-controls button {
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+}
+
+.reader-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    color: white;
+}
+
+.reader-controls button {
+    padding: 0.5rem 1rem;
+}
+
+.reader-page h1 {
+    color: white;
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 425px) {
+
+    .reader-controls {
+        gap: 0.5rem;
+    }
+
+    .reader-controls button {
+        padding: 0.45rem 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .reader-controls span {
+        font-size: 0.9rem;
+        text-align: center;
+    }
+
+}
+
+@media (max-width: 425px) {
+
+    .reader-controls {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .reader-controls button {
+        min-width: 80px;
+    }
+
+    .reader-controls span {
+        font-size: 0.9rem;
+    }
+
+    .reader-page h1 {
+        font-size: 2rem;
+        line-height: 1.1;
+    }
+}
+
+/* 1. Standard Desktop Styles (applied by default or > 768px) */
+@media (min-width: 769px) {
+    .reader-page {
+        width: 424px;
+        margin: 0 auto;
+    }
+}
+
+/* 2. Responsive Mobile Styles (applied for 768px and below) */
+@media (max-width: 768px) {
+    .reader-page {
+        width: 100% !important;
+        max-width: 100vw !important;
+        padding: 1rem !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Force PDF content to fit the mobile viewport */
+    .react-pdf__Document,
+    .react-pdf__Page,
+    .react-pdf__Page canvas {
+        max-width: 100% !important;
+        height: auto !important;
+        width: 100% !important;
+    }
+
+    .reader-controls {
+        width: 100% !important;
+        flex-wrap: wrap !important;
+    }
+}

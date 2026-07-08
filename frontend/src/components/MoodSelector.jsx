@@ -1,4 +1,5 @@
 import MoodCard from "./MoodCard";
+import { useNavigate } from "react-router-dom";
 import "../styles/moodSelector.css";
 
 const moods = [
@@ -60,40 +61,40 @@ const moods = [
 ];
 
 export default function MoodSelector() {
+  const navigate = useNavigate();
   return (
+    
     <section className="mood-section">
-
       <div className="mood-header">
-
         <span className="section-tag">
           🎭 Mood Based Discovery
         </span>
-
         <h2>
           How Are You Feeling Today?
         </h2>
-
         <p>
           Choose your current mood and let
           MoodVerse recommend books that
           match how you feel.
         </p>
-
       </div>
-
       <div className="mood-grid">
-
         {moods.map((mood) => (
           <MoodCard
             key={mood.title}
             emoji={mood.emoji}
             title={mood.title}
             description={mood.description}
+            onClick={() =>
+              navigate(
+                `/discover?mood=${encodeURIComponent(
+                  mood.title
+                )}`
+              )
+            }
           />
         ))}
-
       </div>
-
     </section>
   );
 }

@@ -3,11 +3,14 @@ import "../styles/moodCard.css";
 export default function MoodCard({
   emoji,
   title,
-  description
+  description,
+  onClick
 }) {
   return (
-    <div className="mood-card">
-
+    <div
+      className="mood-card"
+      onClick={onClick}
+    >
       <div className="mood-emoji">
         {emoji}
       </div>

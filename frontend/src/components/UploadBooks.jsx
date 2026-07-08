@@ -1,6 +1,8 @@
 import "../styles/uploadBooks.css";
+import { useNavigate } from "react-router-dom";
 
 export default function UploadBooks() {
+  const navigate = useNavigate();
   return (
     <section className="upload-section">
 
@@ -43,7 +45,12 @@ export default function UploadBooks() {
 
           </div>
 
-          <button className="upload-btn">
+          <button
+            className="upload-btn"
+            onClick={() =>
+              navigate("/library?tab=upload")
+            }
+          >
             Upload Your Own Book
           </button>
 

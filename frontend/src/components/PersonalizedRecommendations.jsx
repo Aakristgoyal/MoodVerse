@@ -1,111 +1,134 @@
-import { Link } from "react-router-dom";
-import "../styles/personalizedRecommendations.css";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import RecommendationRow from "./RecommendationRow";
+
+const API_URL =
+    import.meta.env.VITE_API_URL ||
+    "http://localhost:3000";
 
 export default function PersonalizedRecommendations() {
 
-    // Replace later with actual auth state
-    const isLoggedIn = false;
+    const [sections, setSections] = useState(null);
 
-    const recommendedBooks = [
-        "Atomic Habits",
-        "Deep Work",
-        "The Alchemist",
-        "Ikigai"
-    ];
+    const [loading, setLoading] = useState(true);
 
-    if (isLoggedIn) {
+    useEffect(() => {
+
+        fetchRecommendations();
+
+    }, []);
+
+    async function fetchRecommendations() {
+
+        try {
+
+            const res = await axios.get(
+
+                `${API_URL}/api/personalized`,
+
+                {
+                    withCredentials: true
+                }
+
+            );
+
+            if (res.data.success) {
+
+                setSections(res.data.sections);
+
+            }
+
+        }
+
+        catch (err) {
+
+            console.log(err);
+
+        }
+
+        finally {
+
+            setLoading(false);
+
+        }
+
+    }
+
+    if (loading) {
+
         return (
             <section className="personalized-section">
-
                 <div className="personalized-container">
-
-                    <span className="personalized-tag">
-                        ✨ Recommended For You
-                    </span>
-
-                    <h2>
-                        Personalized Picks Based On Your Interests
-                    </h2>
-
+                    <h2>✨ Building Your Reading Profile...</h2>
                     <p>
-                        These recommendations are generated
-                        using your reading history, favorite genres,
-                        moods and saved books.
+                        Analyzing your interests using AI...
                     </p>
-
-                    <div className="recommendation-list">
-
-                        {recommendedBooks.map((book) => (
-                            <div
-                                key={book}
-                                className="recommendation-item"
-                            >
-                                📚 {book}
-                            </div>
-                        ))}
-
-                    </div>
-
                 </div>
-
             </section>
         );
     }
-
+    if (!sections) {
+        return null;
+    }
     return (
         <section className="personalized-section">
-
             <div className="personalized-container">
-
                 <span className="personalized-tag">
-                    ✨ Personalized Recommendations
+                    ✨ Personalized For You
                 </span>
-
                 <h2>
-                    Recommendations That Get Better With Every Book
+                    Recommendations Based On Your Reading Journey
                 </h2>
-
                 <p>
-                    Create a free MoodVerse account to unlock
-                    recommendations tailored to your reading history,
-                    favorite genres, moods and interests.
-                    The more you read and explore,
-                    the better your recommendations become.
+                    <p>
+                        MoodVerse learns from your reading history,
+                        saved books, AI conversations and current reads
+                        to recommend books uniquely tailored for you.
+                    </p>
                 </p>
-
-                <div className="personalized-features">
-
-                    <div className="personalized-feature">
-                        📚 Based On Your Reading History
-                    </div>
-
-                    <div className="personalized-feature">
-                        🎭 Learns Your Favorite Moods
-                    </div>
-
-                    <div className="personalized-feature">
-                        ❤️ Tracks Preferred Genres
-                    </div>
-
-                    <div className="personalized-feature">
-                        🔍 Discovers Books You'll Enjoy
-                    </div>
-
-                </div>
-
-                <div className="locked-badge">
-                    🔒 Available For Registered Users
-                </div>
-
-                <Link
-                    to="/signup"
-                    className="unlock-btn"
-                >
-                    Create Free Account
-                </Link>
-
             </div>
-
+            {sections.saved?.length > 0 && (
+                <RecommendationRow
+                    title="📚 Because You Saved These"
+                    subtitle="Books you've added to your collection."
+                    books={sections.saved}
+                />
+            )}
+            {sections.conversations?.length > 0 && (
+                <RecommendationRow
+                    title="💬 Inspired By Your AI Conversations"
+                    subtitle="Based on your recent chats with MoodVerse AI."
+                    books={sections.conversations}
+                />
+            )}
+            {sections.continueReading?.length > 0 && (
+                <RecommendationRow
+                    title="📖 Continue Your Reading Journey"
+                    subtitle="Books related to what you're reading right now."
+                    books={sections.continueReading}
+                />
+            )}
+            {sections.uploads?.length > 0 && (
+                <RecommendationRow
+                    title="📤 Similar To Your Uploads"
+                    subtitle="Recommendations based on books you've shared."
+                    books={sections.uploads}
+                />
+            )}
+            {sections.ai?.length > 0 && (
+                <RecommendationRow
+                    title="🤖 MoodVerse AI Picks"
+                    subtitle="Handpicked using your complete reading profile."
+                    books={sections.ai}
+                />
+            )}
+            {sections.explore?.length > 0 && (
+                <RecommendationRow
+                    title="🌍 Explore Something Different"
+                    subtitle="Discover something outside your usual interests."
+                    books={sections.explore}
+                />
+            )}
         </section>
     );
 }
